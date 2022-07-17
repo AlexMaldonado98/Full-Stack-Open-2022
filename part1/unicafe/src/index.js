@@ -9,7 +9,7 @@ const Button = ({ click, text }) => {
 }
 
 
-const FeedBacks = ({ good, neutral, bad }) => {
+const Statistics = ({ good, neutral, bad }) => {
   let all = (good + neutral + bad);
   let average = all === 0 ? 0 : ((good-bad) / all); 
   let positive = all === 0 ? '0%' : `${((good / all) * 100)}%`;
@@ -55,7 +55,7 @@ const App = () => {
         <Button click={() => feedBack('bad')} text={'bad'} />
       </p>
       <h3>statistics</h3>
-      <FeedBacks good={good} neutral={neutral} bad={bad} />
+      <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
 };
