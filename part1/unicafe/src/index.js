@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import ReactDOM from 'react-dom/client'
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom/client';
 
 
 const Button = ({ click, text }) => {
   return (
     <button onClick={click}>{text}</button>
-  )
-}
+  );
+};
 
 
 const Statistics = ({ good, neutral, bad }) => {
@@ -14,18 +14,25 @@ const Statistics = ({ good, neutral, bad }) => {
   let average = all === 0 ? 0 : ((good-bad) / all); 
   let positive = all === 0 ? '0%' : `${((good / all) * 100)}%`;
 
-  return (
-    <>
-      <p>good: {good}</p>
-      <p>neutral: {neutral}</p>
-      <p>bad: {bad}</p>
-      <p>all: {all}</p>
-      <p>average: {average}</p>
-      <p>positive: {positive}</p>
-      
-    </>
-  );
-}
+  if(all === 0){
+    return <p>No feedback given</p>
+  }else{
+    return (
+      <>
+        <p>good: {good}</p>
+        <p>neutral: {neutral}</p>
+        <p>bad: {bad}</p>
+        <p>all: {all}</p>
+        <p>average: {average}</p>
+        <p>positive: {positive}</p>
+        
+      </>
+    );
+  }
+
+};
+
+// const NoFeedBack = () => <p>No feedback given</p>;
 
 const App = () => {
   // save clicks of each button to its own state
