@@ -11,27 +11,36 @@ const Button = ({ click, text }) => {
 
 const Statistics = ({ good, neutral, bad }) => {
   let all = (good + neutral + bad);
-  let average = all === 0 ? 0 : ((good-bad) / all); 
+  let average = all === 0 ? 0 : ((good - bad) / all);
   let positive = all === 0 ? '0%' : `${((good / all) * 100)}%`;
 
-  if(all === 0){
+  if (all === 0) {
     return <p>No feedback given</p>
-  }else{
+  } else {
     return (
-      <>
-        <Statistic text='good' value={good} />
-        <Statistic text='neutral' value={neutral} />
-        <Statistic text='bad' value={bad} />
-        <Statistic text='all' value={all} />
-        <Statistic text='average' value={average} />
-        <Statistic text='positive' value={positive} />  
-      </>
+      <table>
+        <tbody>
+          <Statistic text='good' value={good} />
+          <Statistic text='neutral' value={neutral} />
+          <Statistic text='bad' value={bad} />
+          <Statistic text='all' value={all} />
+          <Statistic text='average' value={average} />
+          <Statistic text='positive' value={positive} />
+        </tbody>
+      </table>
     );
-  }
-
+  };
 };
 
-const Statistic = ({text,value}) => <p>{`${text}: ${value}`}</p> 
+const Statistic = ({ text, value }) => {
+  return(
+    <tr>
+      <td>{text}</td>
+      <td style={{backgroundColor: 'gray'}}/>
+      <td>{value}</td>
+    </tr>
+  )
+}
 
 
 
@@ -43,7 +52,7 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  
+
   const feedBack = type => {
     if (type === 'good') {
       setGood(prevGood => prevGood + 1);
@@ -72,5 +81,5 @@ const App = () => {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <App />
+  <App />
 );
