@@ -18,8 +18,18 @@ const Course = ({ course }) => (
   <>
     <Header name={course.name} />
     <Content parts={course.parts} />
+    <Total parts={course.parts} /> 
   </>
 );
+
+const Total = ({parts}) => {
+  const total = parts.reduce((s,q) => {
+    console.log(s,q.exercises)
+    return s + q.exercises
+  },0);
+
+  return <h3>Total of {total} exercises</h3>
+}
 
 const App = () => {
   const course = {
@@ -49,8 +59,6 @@ const App = () => {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <App />
-  </React.StrictMode>
 );
 
