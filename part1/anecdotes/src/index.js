@@ -7,12 +7,35 @@ const Button = ({text,click}) => {
   );
 }
 
+const MostVotes = ({votes,anecdotes}) => {
+  let maxVote = 0;
+  let index;
+
+  for (const vote in votes) {
+    if (votes[vote] > maxVote) {
+      maxVote = votes[vote];
+      index = vote
+    }
+  }
+
+  if(maxVote === 0){
+    return <p>No hay votos</p>
+  }else{
+    return (
+      <> 
+        <p>{anecdotes[index]}</p>
+        <p>has {maxVote} votes</p>
+      </>
+    );
+  }
+};
 
 
 const App = (props) => {
 
   const [selected, setSelected] = useState(0);
   const [votes,setVotes] = useState([0,0,0,0,0,0]);
+  const [maxVote, setVote] = useState(0);
 
   const random = () => {
     const randoNumber = Math.round(Math.random() * 5);
@@ -29,10 +52,13 @@ const App = (props) => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{props.anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <Button click={random} text={'next anecdote'}/>
       <Button click={() => vote(selected)} text={'vote'}/>
+      <h1>Anecdote with most votes</h1>
+      <MostVotes votes={votes} anecdotes={props.anecdotes} />
     </div>
   )
 }
