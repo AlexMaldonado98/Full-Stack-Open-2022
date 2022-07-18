@@ -12,7 +12,7 @@ const App = (props) => {
   const [selected, setSelected] = useState(0);
 
   const random = () => {
-    const randoNumber = Math.round(Math.random * 5);
+    const randoNumber = Math.round(Math.random() * 5);
     setSelected(randoNumber);
   }
 
