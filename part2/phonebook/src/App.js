@@ -20,8 +20,18 @@ const App = () => {
 
   const handleAdd = (e) => {
     e.preventDefault();
-    setPersons(persons.concat({name: newName}));
-    setNewName('');
+    const same = persons.find((person) => {
+      return person.name === newName
+    });
+    console.log(same);
+
+    if(same){
+      alert(`${same.name} is already added to phonebook`);
+    }else{
+      setPersons(persons.concat({name: newName}));
+      setNewName('');
+    }
+    
   }
 
 
