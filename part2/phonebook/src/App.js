@@ -1,19 +1,5 @@
 import React, { useState } from 'react'
-
-const Members = ({ persons }) => {
-
-  return persons.map((person => <p key={person.name}>{person.name} / tel: {person.phone}</p>));
-
-};
-
-const Filter = ({ handleFilter, filter, filterPersons }) => {
-  return (
-    <div>
-      <input type={'text'} onChange={handleFilter} value={filter} />
-      {filterPersons.map((person) => <p key={person.name}>{person.name}</p>)}
-    </div>
-  )
-}
+import {Filter, NewPerson, Members} from './components/PhoneBook';
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -25,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newPhone, setPhone] = useState('');
   const [filter, setFilter] = useState('');
+  const wantedPerson = filter === '' ? [] : persons.filter((person) => person.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1);
 
   const handleChange = (e) => {
     setNewName(e.target.value);
@@ -56,28 +43,21 @@ const App = () => {
     setFilter(e.target.value);
   }
 
-  const wantedPerson = filter === '' ? [] : persons.filter((person) => person.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1);
 
-
+  
+  
   return (
     <div>
       <h2>Phonebook</h2>
       <p>filter shown with</p>
       <Filter handleFilter={handleFilter} filterPersons={wantedPerson} value={filter} />
       <h2>add a new</h2>
-      <form onSubmit={handleAdd}>
-        <div>
-          name : <input type={'text'} onChange={handleChange} value={newName} /> <br></br>
-          phone: <input type={'number'} onChange={handlePhone} value={newPhone} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <NewPerson newName={newName} newPhone={newPhone} handleAdd={handleAdd} handleChange={handleChange} handlePhone={handlePhone} />
       <h2>Numbers</h2>
       <Members persons={persons} />
     </div>
   )
 }
+
 
 export default App
