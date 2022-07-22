@@ -1,6 +1,6 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import {Filter, NewPerson, Members} from './components/PhoneBook';
+import {create, getAll} from './services/phoneBook'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -29,11 +29,16 @@ const App = () => {
     } else if (newName === '') {
       alert('You have to fill the name field')
     } else {
-      setPersons(persons.concat({ name: newName, phone: newPhone }));
+      const newPerson = {
+        name: newName,
+        phone: newPhone
+      }
+      create(newPerson).then(response => {
+        setPersons(persons.concat(response.data));
+      });
       setNewName('');
       setPhone('');
     }
-
   }
 
   const handleFilter = (e) => {
@@ -41,7 +46,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons').then((response) => setPersons(response.data));
+    getAll().then((response) => setPersons(response.data));
   },[]);
   
   return (
