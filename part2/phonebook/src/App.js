@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {Filter, NewPerson, Members} from './components/PhoneBook';
-import {create, getAll} from './services/phoneBook'
+import {create, getAll, deletePerson} from './services/phoneBook'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -31,7 +31,7 @@ const App = () => {
     } else {
       const newPerson = {
         name: newName,
-        phone: newPhone
+        number: newPhone
       }
       create(newPerson).then(response => {
         setPersons(persons.concat(response.data));
@@ -43,6 +43,16 @@ const App = () => {
 
   const handleFilter = (e) => {
     setFilter(e.target.value);
+  }
+
+  const removePerson = (id) => {
+    const personTarget = persons.filter(person => person.id === id);
+
+    if(window.confirm(`Delete ${personTarget[0].name}?`)){
+      const newPersons = persons.filter(person => person.id !== id);
+      deletePerson(id);
+      setPersons(newPersons);
+    }
   }
 
   useEffect(() => {
@@ -57,7 +67,7 @@ const App = () => {
       <h2>add a new</h2>
       <NewPerson newName={newName} newPhone={newPhone} handleAdd={handleAdd} handleChange={handleChange} handlePhone={handlePhone} />
       <h2>Numbers</h2>
-      <Members persons={persons} />
+      <Members persons={persons} click={removePerson} />
     </div>
   )
 }

@@ -10,9 +10,14 @@ export const NewPerson = ({ newName, newPhone, handleAdd, handleChange, handlePh
     </form>
 );
 
-export const Members = ({ persons }) => {
+export const Members = ({ persons,click}) => {
 
-    return persons.map((person => <p key={person.name}>{person.name} / tel: {person.phone}</p>));
+    return persons.map(person => (
+        <div key={person.name}>
+            <span>{person.name} / tel: {person.number} / </span>
+            <button onClick={() => click(person.id)}>delete</button>
+        </div>
+    ))
 
 };
 
