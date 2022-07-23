@@ -29,3 +29,11 @@ export const Filter = ({ handleFilter, filter, filterPersons }) => {
         </div>
     )
 }
+
+export const Message = ({message}) => {
+    if(message === null){
+        return null
+    }
+    
+    return <p className="message">{message}</p>
+}

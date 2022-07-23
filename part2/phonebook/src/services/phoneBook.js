@@ -2,8 +2,9 @@ import axios from "axios";
 
 const URL_API = 'http://localhost:3001/persons';
 
-export const getAll = () => {
-    return axios.get(URL_API);
+export const getAll = (setPersons) => {
+    const request = axios.get(URL_API);
+    return request.then((response) => setPersons(response.data))
 };
 
 export const create = newPerson => {
