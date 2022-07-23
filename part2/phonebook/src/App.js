@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {Filter, NewPerson, Members} from './components/PhoneBook';
-import {create, getAll, deletePerson} from './services/phoneBook'
+import {create, getAll, deletePerson, update} from './services/phoneBook'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -23,9 +23,18 @@ const App = () => {
     const same = persons.find((person) => {
       return person.name === newName
     });
+    console.log({same})
 
     if (same) {
-      alert(`${same.name} is already added to phonebook`);
+      if(same.number !== newPhone ){
+        if(window.confirm(`${same.name} is already added to phonebook, replace the old number with a new one `)){
+          const newObject = {...same, number: newPhone}
+          update(same.id,newObject);
+          setPersons(persons.map(person => person.id === same.id ? {...person, number: newPhone} : person));
+        } 
+      }else{
+          alert(`${same.name} is already to phonebook`)
+        }
     } else if (newName === '') {
       alert('You have to fill the name field')
     } else {

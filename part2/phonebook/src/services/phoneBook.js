@@ -14,3 +14,8 @@ export const deletePerson = (id) => {
     const request = axios.delete(`${URL_API}/${id}`)
     return request.then( response => response.data);
 }
+
+export const update = (id,newObject) => {
+    const request = axios.put(`${URL_API}/${id}`,newObject)
+    return request.then(response => response.data)
+}

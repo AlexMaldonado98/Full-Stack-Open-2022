@@ -25,7 +25,7 @@ export const Filter = ({ handleFilter, filter, filterPersons }) => {
     return (
         <div>
             <input type={'text'} onChange={handleFilter} value={filter} />
-            {filterPersons.map((person) => <p key={person.name}>{person.name}</p>)}
+            {filterPersons.map((person) => <p key={person.name}> {`${person.name} / ${person.number}`}</p>)}
         </div>
     )
 }
