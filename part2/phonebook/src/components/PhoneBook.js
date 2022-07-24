@@ -10,7 +10,7 @@ export const NewPerson = ({ newName, newPhone, handleAdd, handleChange, handlePh
     </form>
 );
 
-export const Members = ({ persons,click}) => {
+export const Members = ({ persons, click }) => {
 
     return persons.map(person => (
         <div key={person.name}>
@@ -30,10 +30,14 @@ export const Filter = ({ handleFilter, filter, filterPersons }) => {
     )
 }
 
-export const Message = ({message}) => {
-    if(message === null){
+export const Message = ({ message }) => {
+    if (message === null) {
         return null
     }
-    
-    return <p className="message">{message}</p>
+
+    if (message.includes('ERROR')){
+        return <p className="messageError" >{message}</p>
+    }else {
+        return <p className="message">{message}</p>
+    };
 }

@@ -11,6 +11,10 @@ const App = () => {
   const [filter, setFilter] = useState('');
   const [message, setMesssage] = useState(null)
   const wantedPerson = filter === '' ? [] : persons.filter((person) => person.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) > -1);
+  
+  useEffect(() => {
+    getAll().then(response => setPersons(response));
+  }, []);
 
   const handleChange = (e) => {
     setNewName(e.target.value);
@@ -34,6 +38,13 @@ const App = () => {
           .then(() => {
             setPersons(persons.map(person => person.id === same.id ? { ...person, number: newPhone } : person));
             setMesssage(`the number has been updated successfully`);
+            console.log(message)
+            setTimeout(() => {
+              setMesssage(null);
+            }, 4000);
+          }).catch((error) => {
+            console.log({error});
+            setMesssage(`[ERROR] information of ${same.name} has already been removed from server`);
             setTimeout(() => {
               setMesssage(null);
             }, 4000);
@@ -50,7 +61,7 @@ const App = () => {
         number: newPhone
       }
       create(newPerson).then(response => {
-        setPersons(persons.concat(response.data));
+        setPersons(persons.concat(response));
         setMesssage(`Added ${newName}`);
         setTimeout(() => {
           setMesssage(null);
@@ -76,14 +87,11 @@ const App = () => {
     }
   }
 
-  useEffect(() => {
-    getAll(setPersons);
-  }, []);
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Message message={message} />
+      <Message message={message}/>
       <p>filter shown with</p>
       <Filter handleFilter={handleFilter} filterPersons={wantedPerson} value={filter} />
       <h2>add a new</h2>
