@@ -1,3 +1,6 @@
+/* eslint-disable react/prop-types */
+import React from 'react';
+
 export const NewPerson = ({ newName, newPhone, handleAdd, handleChange, handlePhone }) => (
     <form onSubmit={handleAdd}>
         <div>
@@ -17,7 +20,7 @@ export const Members = ({ persons, click }) => {
             <span>{person.name} / tel: {person.number} / </span>
             <button onClick={() => click(person.id)}>delete</button>
         </div>
-    ))
+    ));
 
 };
 
@@ -27,17 +30,17 @@ export const Filter = ({ handleFilter, filter, filterPersons }) => {
             <input type={'text'} onChange={handleFilter} value={filter} />
             {filterPersons.map((person) => <p key={person.name}> {`${person.name} / ${person.number}`}</p>)}
         </div>
-    )
-}
+    );
+};
 
 export const Message = ({ message }) => {
     if (message === null) {
-        return null
+        return null;
     }
 
     if (message.includes('ERROR')){
-        return <p className="messageError" >{message}</p>
+        return <p className="messageError" >{message}</p>;
     }else {
-        return <p className="message">{message}</p>
-    };
-}
+        return <p className="message">{message}</p>;
+    }
+};
