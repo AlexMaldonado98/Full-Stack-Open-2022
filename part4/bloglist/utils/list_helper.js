@@ -6,6 +6,13 @@ const dummy = (Array) => {
     }
 };
 
+const totalLikes = (Array) => {
+    const likes = Array.map(blog => blog.likes);
+    console.log(likes);
+    return likes.reduce((a,b) => a + b,0);
+};
+
 module.exports = {
-    dummy
+    dummy,
+    totalLikes
 };
