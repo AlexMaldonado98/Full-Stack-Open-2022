@@ -1,10 +1,8 @@
 import axios from 'axios';
-
-const URL_API = 'http://localhost:3001/persons';
+const URL_API = '/api/persons';
 
 export const getAll = () => {
     const request = axios.get(URL_API);
-    console.log(request.then(response => response.data));
     return request.then(response => response.data);
 };
 

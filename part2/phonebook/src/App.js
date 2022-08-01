@@ -42,8 +42,8 @@ const App = () => {
                                 setMesssage(null);
                             }, 4000);
                         }).catch((error) => {
-                            console.log({ error });
-                            setMesssage(`[ERROR] information of ${same.name} has already been removed from server`);
+                            console.log(error);
+                            setMesssage(`[ERROR] ${error.response.data.error}`);
                             setTimeout(() => {
                                 setMesssage(null);
                             }, 4000);
@@ -62,6 +62,11 @@ const App = () => {
             create(newPerson).then(response => {
                 setPersons(persons.concat(response));
                 setMesssage(`Added ${newName}`);
+                setTimeout(() => {
+                    setMesssage(null);
+                }, 4000);
+            }).catch(error => {
+                setMesssage(`[ERROR] ${error.response.data.error}`);
                 setTimeout(() => {
                     setMesssage(null);
                 }, 4000);
