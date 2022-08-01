@@ -6,7 +6,7 @@ node_modules/
 .pnp.js
 package-lock.json
 .eslintrc.js
-
+.env
 # testing
 coverage
 

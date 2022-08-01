@@ -1,19 +1,21 @@
-const config = require('./utils/config');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const express = require('express');
 const morgan = require('morgan');
-const app = express();
+const config = require('./utils/config');
 const blogsRouter = require('./controllers/blogs');
 const middleware = require('./utils/middleware');
 const logger = require('./utils/logger');
-const mongoUrl = config.MONBODB_URI;
+const app = express();
+
+const MONGODB_URI = config.MONBODB_URI;
+
 morgan.token('data', (request) => request.method === 'POST' ? JSON.stringify(request.body) : '');
 
 logger.info('connecting to mongodb');
 
 
-mongoose.connect(mongoUrl)
+mongoose.connect(MONGODB_URI)
     .then(() => {
         console.log('connected to mongodb');
     })
