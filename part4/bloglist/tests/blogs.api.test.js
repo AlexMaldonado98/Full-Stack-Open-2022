@@ -70,6 +70,22 @@ describe('adding', () => {
         expect(blogsInDB[blogsInDB.length - 1].likes).toBe(0);
     });
 
+    test('a blog with missing content', async () => {
+        const newBlog = {
+            author: 'missing',
+            url: 'www.missingcontent.com'
+        };
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400);
+
+        const blogsInDB = await getBlogsInDB();
+        expect(blogsInDB).toHaveLength(blogs.length);
+        expect(blogsInDB[blogs.length-1].author).not.toContain('missing');
+    });
+
 
 });
 
