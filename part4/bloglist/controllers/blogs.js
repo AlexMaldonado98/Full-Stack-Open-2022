@@ -16,7 +16,7 @@ blogsRouter.post('/', async (request, response) => {
     });
 
     const result = await newBlog.save();
-    response.status(200).json(result);
+    response.status(201).json(result);
 });
 
 module.exports = blogsRouter;

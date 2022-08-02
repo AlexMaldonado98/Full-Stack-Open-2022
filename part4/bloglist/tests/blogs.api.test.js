@@ -32,6 +32,26 @@ describe('Initial blogs',() => {
     });
 });
 
+describe('adding', () => {
+    test('a new blog', async () => {
+        const newBlog = {
+            title: 'myFirstApp',
+            author: 'Alex',
+            url: 'www.google.com',
+            likes: '33'
+        };
+
+        await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', /application\/json/);
+
+        const result = await api.get('/api/blogs').expect(200);
+
+        expect(result.body).toHaveLength(blogs.length + 1);
+
+        const objTitle = result.body.map(blog => blog.title);
+        expect(objTitle).toContain('myFirstApp');
+    });
+});
+
 afterAll(() => {
     mongoose.connection.close();
 });
