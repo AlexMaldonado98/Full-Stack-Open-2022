@@ -33,7 +33,7 @@ describe('Initial blogs',() => {
     });
 });
 
-describe('adding', () => {
+describe('Adding', () => {
     test('a new blog', async () => {
         const newBlog = {
             title: 'myFirstApp',
@@ -87,6 +87,33 @@ describe('adding', () => {
     });
 
 
+});
+
+describe('Delete',() => {
+    test('a blog by id', async () => {
+        const blogDelete = blogs[0];
+
+        await api
+            .delete(`/api/blogs/${blogDelete._id}`)
+            .expect(204);
+
+        const blogsInDB = await getBlogsInDB();
+        expect(blogsInDB[0].title).toContain('Go To Statement Considered Harmful');
+        expect(blogsInDB[0].title).not.toContain(blogDelete.title);
+
+    });
+
+    test('a blog with a malformad id', async () => {
+        const blogDelete = blogs[0];
+
+        await api
+            .delete(`/api/blogs/${blogDelete._id}d`)
+            .expect(400);
+
+        const blogsInDB = await getBlogsInDB();
+        expect(blogsInDB).toHaveLength(blogs.length);
+
+    });
 });
 
 afterAll(() => {
