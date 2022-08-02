@@ -8,7 +8,7 @@ const middleware = require('./utils/middleware');
 const logger = require('./utils/logger');
 const app = express();
 
-const MONGODB_URI = config.MONBODB_URI;
+const MONGODB_URI = config.MONGODB_URI;
 
 morgan.token('data', (request) => request.method === 'POST' ? JSON.stringify(request.body) : '');
 
