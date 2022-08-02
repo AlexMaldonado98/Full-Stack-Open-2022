@@ -15,4 +15,8 @@ blogSchema.set('toJSON', {
     }
 });
 
+process.on('unCauthErro',() => {
+    mongoose.connection.close();
+});
+
 module.exports = mongoose.model('Blog', blogSchema);

@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
-const { blogs } = require('./test_helper');
+const { blogs, getBlogsInDB } = require('./test_helper');
 const Blog = require('../models/blog');
+const { server } = require('../index');
 
 beforeEach(async () => {
     await Blog.deleteMany({});
@@ -50,8 +51,29 @@ describe('adding', () => {
         const objTitle = result.body.map(blog => blog.title);
         expect(objTitle).toContain('myFirstApp');
     });
+
+    test('a blog without likes', async () => {
+        const newBlog = {
+            title: 'hasNoLikes',
+            author: 'Unknow',
+            url: 'www.notLikes.com'
+        };
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/);
+
+        const blogsInDB = await getBlogsInDB();
+        expect(blogsInDB).toHaveLength(blogs.length + 1);
+        expect(blogsInDB[blogsInDB.length - 1].likes).toBe(0);
+    });
+
+
 });
 
 afterAll(() => {
     mongoose.connection.close();
+    server.close();
 });
