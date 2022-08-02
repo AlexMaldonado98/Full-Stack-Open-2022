@@ -13,12 +13,22 @@ beforeEach(async () => {
     }
 });
 
-describe('GET Blogs',() => {
-    test('all blogs', async () => {
+describe('Initial blogs',() => {
+    test('are required', async () => {
         await api
             .get('/api/blogs')
             .expect(200)
             .expect('Content-Type', /application\/json/);
+    });
+
+    test('are called id', async () => {
+        const { body } = await api.get('/api/blogs');
+
+        const ids = body.map(blog => blog.id);
+
+        for (const id of ids) {
+            expect(id).toBeDefined();
+        }
     });
 });
 
