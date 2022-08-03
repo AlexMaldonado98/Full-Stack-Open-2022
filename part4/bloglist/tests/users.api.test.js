@@ -45,9 +45,51 @@ describe('Adding user',() => {
         expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
         expect(usersAtEnd[usersAtEnd.length-1].username).toContain('Alex With hash');
     });
+
+    test('with restrictions in username and password successfully', async () => {
+        const usersAtStart = await getUsersInDB();
+        const newUser = {
+            username: 'successfully',
+            name: 'Succellfully Exits',
+            passwordHash: 'successpass'
+        };
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(201)
+            .expect('Content-Type', /application\/json/);
+
+        const usersAtEnd = await getUsersInDB();
+        expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
+
+        const ultimateUser = usersAtEnd[usersAtEnd.length - 1].username;
+        expect(ultimateUser).toContain('successfully');
+    });
+
+    test('with username long < 3 ', async () => {
+        const usersAtStart = await getUsersInDB();
+        const newUser = {
+            username: 'su',
+            name: 'Succellfully Exits',
+            passwordHash: 'successpass'
+        };
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/);
+
+        const usersAtEnd = await getUsersInDB();
+        expect(usersAtEnd).toHaveLength(usersAtStart.length);
+
+        const ultimateUser = usersAtEnd[usersAtEnd.length - 1].name;
+        expect(ultimateUser).toContain('Alex Maldonado 2');
+    });
 });
 
 afterAll(() => {
-    server.close();
     mongoose.connection.close();
+    server.close();
 });

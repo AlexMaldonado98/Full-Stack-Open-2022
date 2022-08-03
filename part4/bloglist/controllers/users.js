@@ -8,17 +8,28 @@ usersRouter.get('/', async (request,response) => {
 });
 
 usersRouter.post('/', async (request, response) => {
-    const body = request.body;
-    if(!(body.username && body.passwordHash)){
+    const { username,name,passwordHash } = request.body;
+
+    if(!(username && passwordHash)){
         return response.status(400).send({ error:'the password and username is required' });
     }
-    console.log('entre');
+
+    const userExistent = await User.findOne({ username });
+    if(userExistent){
+        return response.status(400).json({ error: 'the username is in use' });
+    }
+
+    if(username.length < 3 || passwordHash.length < 3){
+        return response.status(400).json({ error: 'username and password are too short: the minimum is 3 characters' });
+    }
+
+
     const saltRounds = 10;
-    const passwordWithHash = await bcrypt.hash(body.passwordHash,saltRounds);
+    const passwordWithHash = await bcrypt.hash(passwordHash,saltRounds);
 
     const newUser = new User({
-        username: body.username,
-        name: body.name,
+        username: username,
+        name: name,
         passwordHash: passwordWithHash
     });
 

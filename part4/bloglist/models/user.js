@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    username: String,
+    username:String,
     name: String,
     passwordHash: String
 });
@@ -11,9 +11,10 @@ userSchema.set('toJSON',{
         returnObject.id = returnObject._id.toString();
 
         delete returnObject._id;
-        delete returnObject._v;
+        delete returnObject.__v;
         delete returnObject.passwordHash;
     }
 });
+
 
 module.exports = new mongoose.model('User',userSchema);

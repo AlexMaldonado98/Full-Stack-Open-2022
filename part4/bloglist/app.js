@@ -15,7 +15,6 @@ morgan.token('data', (request) => request.method === 'POST' ? JSON.stringify(req
 
 logger.info('connecting to mongodb');
 
-
 mongoose.connect(MONGODB_URI)
     .then(() => {
         console.log('connected to mongodb');

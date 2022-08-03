@@ -66,12 +66,12 @@ const blogs = [
 const users_initials = [
     {
         username:'Alex Initial',
-        name: 'Alex Joaquin',
+        name: 'Alex Maldonado',
         password: 'passSinHash'
     },
     {
         username:'Alex Initial 2',
-        name: 'Alex Joaquin 2',
+        name: 'Alex Maldonado 2',
         password: 'passSinHash 2'
     }
 ];
