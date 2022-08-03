@@ -5,5 +5,6 @@ Content-Type: application/json
     "title": "hola mundo",
     "author": "Alex Maldonado",
     "url": "http://mi-libro-luna-de-pluton.com",
-    "likes": 11
+    "likes": 11,
+    "userOfBlog" : "62ea0c5b2798f87cd17c4ba4"
 } 

@@ -10,12 +10,19 @@ const blogSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    likes: Number
+    likes:{
+        type: Number,
+        default:0
+    },
+    userOfBlog: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 });
 
 blogSchema.set('toJSON', {
     transform: (document, returnObject) => {
-        returnObject.id = returnObject._id.toString();
+        returnObject.id = returnObject._id;
         delete returnObject._id;
         delete returnObject.__v;
     }

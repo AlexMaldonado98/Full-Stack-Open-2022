@@ -4,5 +4,6 @@ Content-Type: application/json
 {
     "name": "alex",
     "username": "Alex username",
-    "passwordHash": "12"
+    "passwordHash": "12",
+    "BlogsOfUser": [{}]
 } 
