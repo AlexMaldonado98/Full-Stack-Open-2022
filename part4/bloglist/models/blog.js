@@ -21,7 +21,7 @@ blogSchema.set('toJSON', {
     }
 });
 
-process.on('unCauthErro',() => {
+process.on('unCauthError',() => {
     mongoose.connection.close();
 });
 
