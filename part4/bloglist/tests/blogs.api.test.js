@@ -116,6 +116,26 @@ describe('Delete',() => {
     });
 });
 
+describe('update a blog', () => {
+    test('updatign likes',async () => {
+        let blogsInDB = await getBlogsInDB();
+        const blogToUpdate = blogsInDB[0];
+
+        const updateBlog = {
+            title: 'im new',
+            likes: 100
+        };
+
+        const { body } = await api
+            .put(`/api/blogs/${blogToUpdate.id}`,updateBlog)
+            .send(updateBlog)
+            .expect(200);
+        expect(body.title).toContain('im new');
+        blogsInDB = await getBlogsInDB();
+        expect(blogsInDB[0].likes).toBe(100);
+    });
+});
+
 afterAll(() => {
     mongoose.connection.close();
     server.close();
