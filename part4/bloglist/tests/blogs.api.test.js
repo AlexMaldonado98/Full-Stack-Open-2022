@@ -1,12 +1,18 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
+const bcrypt = require('bcrypt');
 const app = require('../app');
 const api = supertest(app);
 const { blogs, getBlogsInDB } = require('./test_helper');
 const Blog = require('../models/blog');
 const { server } = require('../index');
+const User = require('../models/user');
+const jwt = require('jsonwebtoken');
+const config = require('../utils/config');
+
 
 beforeEach(async () => {
+    console.log('befoEach()-------------------------------------');
     await Blog.deleteMany({});
     for (let b of blogs) {
         let newBlog = new Blog(b);
@@ -34,6 +40,16 @@ describe('Initial blogs',() => {
 });
 
 describe('Adding', () => {
+    let token = null;
+    beforeAll(async () => {
+        await User.deleteMany({});
+        console.log('beforeAll()+++++++++++++++++++++++++++++++++++');
+        const passwordWithHash = await bcrypt.hash('testpass',10);
+        const user = await new User({ username:'testname', passwordHash:passwordWithHash,name:'testname' }).save();
+        const infoToken = { username:user.username,id: user._id };
+        return token = jwt.sign(infoToken,config.SECRET);
+    });
+
     test('a new blog', async () => {
         const newBlog = {
             title: 'myFirstApp',
@@ -42,7 +58,12 @@ describe('Adding', () => {
             likes: '33'
         };
 
-        await api.post('/api/blogs').send(newBlog).expect(201).expect('Content-Type', /application\/json/);
+        await api.
+            post('/api/blogs')
+            .set('Authorization',`bearer ${token}`)
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/);
 
         const result = await api.get('/api/blogs').expect(200);
 
@@ -61,6 +82,7 @@ describe('Adding', () => {
 
         await api
             .post('/api/blogs')
+            .set('Authorization',`bearer ${token}`)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/);
@@ -78,6 +100,7 @@ describe('Adding', () => {
 
         await api
             .post('/api/blogs')
+            .set('Authorization',`bearer ${token}`)
             .send(newBlog)
             .expect(400);
 
@@ -90,16 +113,42 @@ describe('Adding', () => {
 });
 
 describe('Delete',() => {
-    test('a blog by id', async () => {
-        const blogDelete = blogs[0];
+    let token = null;
+    beforeEach(async () => {
+        await User.deleteMany({});
+
+        const passwordWithHash = await bcrypt.hash('12345', 10);
+        const user = await new User({ username: 'name', passwordHash: passwordWithHash, name: 'NameOfUser' }).save();
+
+        const infoToken = { username: user.username, id: user._id };
+        token = jwt.sign(infoToken, config.SECRET);
+
+        const newBlog = {
+            title: 'ObjectiveDelete',
+            author: 'DeleteAuthor',
+            url: 'www.google.com',
+            likes:9
+        };
 
         await api
-            .delete(`/api/blogs/${blogDelete._id}`)
+            .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/);
+    });
+    test('a blog by id', async () => {
+        const blogDelete = await Blog.find({});
+
+        await api
+            .delete(`/api/blogs/${blogDelete[blogDelete.length - 1]._id}`)
+            .set('Authorization',`bearer ${token}`)
             .expect(204);
 
         const blogsInDB = await getBlogsInDB();
-        expect(blogsInDB[0].title).toContain('Go To Statement Considered Harmful');
-        expect(blogsInDB[0].title).not.toContain(blogDelete.title);
+
+        expect(blogsInDB[blogsInDB.length - 1].title).toContain(blogs[blogs.length-1].title);
+        expect(blogsInDB[blogsInDB.length - 1].title).not.toContain(blogDelete[blogDelete.length - 1].title);
 
     });
 
@@ -107,11 +156,12 @@ describe('Delete',() => {
         const blogDelete = blogs[0];
 
         await api
-            .delete(`/api/blogs/${blogDelete._id}d`)
+            .delete(`/api/blogs/${blogDelete._id}ddd`)
+            .set('Authorization',`bearer ${token}`)
             .expect(400);
 
         const blogsInDB = await getBlogsInDB();
-        expect(blogsInDB).toHaveLength(blogs.length);
+        expect(blogsInDB).toHaveLength(blogs.length+1);
 
     });
 });
