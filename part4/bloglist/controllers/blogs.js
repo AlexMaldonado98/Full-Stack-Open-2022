@@ -31,12 +31,19 @@ blogsRouter.post('/',userIdExtractor ,async (request, response,next) => {
     }
 });
 
-blogsRouter.delete('/:id',async (request,response,next) => {
+blogsRouter.delete('/:id',userIdExtractor,async (request,response,next) => {
     try {
         const { id } = request.params;
-        await Blog.findByIdAndDelete(id);
-        response.status(204).end();
-
+        const blogToDelate = await Blog.findById(id);
+        if(blogToDelate === null){
+            return response.status(404).json({ error: 'the blog does not exist' });
+        }
+        if(blogToDelate.userOfBlog.toString() === request.userId){
+            await Blog.findByIdAndDelete(id);
+            response.status(204).end();
+        }else{
+            response.status(401).json({ error: 'unauthorized operation' });
+        }
     } catch (error) {
         next(error);
     }
