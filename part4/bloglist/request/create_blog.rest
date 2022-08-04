@@ -1,10 +1,11 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJleHRyYWN0b3IiLCJpZCI6IjYyZWIxNTg0MzI5YWY5OWY4ODlmMTJhZiIsImlhdCI6MTY1OTU3NDkzMiwiZXhwIjoxNjU5NTc0OTQyfQ.ejrikx-nHg-rTxP084m68D2Mpz91xxDKuzay-LZvXEY
+
 
 {
-    "title": "hola mundo",
-    "author": "Alex Maldonado",
-    "url": "http://mi-libro-luna-de-pluton.com",
-    "likes": 11,
-    "userOfBlog" : "62ea0c5b2798f87cd17c4ba4"
+    "title": "expired",
+    "author": "2222222222",
+    "url": "2222222",
+    "likes": 222222
 } 
