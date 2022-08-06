@@ -4,10 +4,13 @@ import blogService from './services/blogs';
 import { loginUser } from './services/login';
 import { LoginForm } from './components/LoginForm';
 import { BlogForm } from './components/BlogForm';
+import { Notifications } from './components/Notification';
+import './App.css';
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
     const [user, setUser] = useState(null);
+    const [message, setMessage] = useState(null);
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
@@ -25,36 +28,65 @@ const App = () => {
     },[]);
 
     const handleLogin = async (userName,password) => {
-        try {
-            const user = await loginUser({username:userName, passwordHash:password});
-            window.localStorage.setItem('userCredentials',JSON.stringify(user));
-            blogService.setToken(user.token);
-            setUser(user);
-        } catch (error) {
-            console.log(error.message);
+        if(userName && password !== ''){
+            try {
+                const user = await loginUser({username:userName, passwordHash:password});
+                window.localStorage.setItem('userCredentials',JSON.stringify(user));
+                blogService.setToken(user.token);
+                setUser(user);
+                setMessage('Login success');
+                setTimeout(() => {
+                    setMessage(null);
+                },3000);
+            } catch (error) {
+                setMessage(`[ERROR] ${error.response.data.error}`);
+                setTimeout(() => {
+                    setMessage(null);
+                },3000);
+            }
+        }else{
+            setMessage('[ERROR] You need to fill in all the fields');
+            setTimeout(() => {
+                setMessage(null);
+            },5000);
+            
         }
     };
-
+    
     const handleLogout = (event) => {
         event.preventDefault();
         window.localStorage.removeItem('userCredentials');
         setUser(null);
-    
     };
 
     const handleNewBlog = async (title,author,url) => {
-        const response = await blogService.create({title,author,url});
-        setBlogs([...blogs,response]);
+        try {
+            const response = await blogService.create({title,author,url});
+            setBlogs([...blogs,response]);
+            setMessage(`A new blog ${response.title} by ${response.author} added`);
+            setTimeout(() => {
+                setMessage(null);
+            },5000);
+        } catch (error) {
+            setMessage('[ERROR] the title and url is required');
+            setTimeout(() => {
+                setMessage(null);
+            },5000);
+        }
     };
 
     if(user === null){
         return(
-            <LoginForm handleLogin={handleLogin} />
+            <>
+                <Notifications message={message} /> 
+                <LoginForm handleLogin={handleLogin} />
+            </>
         );
     }
-
+    
     return (
         <div>
+            <Notifications message={message} /> 
             <span>{`user: ${user.username} logged in`}</span>
             <button onClick={handleLogout}>logout</button>
             <h1>create new</h1>
