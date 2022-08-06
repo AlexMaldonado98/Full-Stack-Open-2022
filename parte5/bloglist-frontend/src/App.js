@@ -80,6 +80,17 @@ const App = () => {
         }
     };
 
+    const updateLikes = async (id,newBlogLike) => {
+        try {
+            const response = await blogService.update(id,newBlogLike);
+            setBlogs(blogs.map(blog => blog.id === response.id ? response : blog));
+        } catch (error) {
+            console.log(error.response.data.error);
+        }
+
+
+    };
+
     if (user === null) {
         return (
             <>
@@ -100,7 +111,7 @@ const App = () => {
             </Togglable>
             <h2>blogs</h2>
             {blogs.map(blog =>
-                <Blog key={blog.id} blog={blog} />
+                <Blog key={blog.id} blog={blog} updateLikes={updateLikes}/>
             )}
         </div>
     );
