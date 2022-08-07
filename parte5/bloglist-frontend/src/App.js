@@ -126,7 +126,7 @@ const App = () => {
             <span>{`user: ${user.username} logged in`}</span>
             <button onClick={handleLogout}>logout</button>
             <h1>create new</h1>
-            <Togglable button={'New blog'} ref={toggleRef} >
+            <Togglable button={'New Blog'} ref={toggleRef} >
                 <BlogForm handleNewBlog={handleNewBlog} />
             </Togglable>
             <h2>blogs</h2>
