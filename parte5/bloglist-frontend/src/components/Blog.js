@@ -1,21 +1,35 @@
 import { useState } from 'react';
+import jwt from 'jwt-decode';
 
-const Blog = ({ blog, updateLikes }) => {
+const Blog = ({ blog, updateLikes, user, handleBlogDelete }) => {
     const [visible, setVisible] = useState(false);
+
+    const token = jwt(user.token);
 
     const toggleVisibility = () => {
         setVisible(!visible);
     };
 
-    const addLike = () => {
+    const addLike = async () => {
         const newLike = {
             title: blog.title,
             author: blog.author,
             url: blog.url,
             likes: blog.likes + 1,
-            userOfBlog: blog.userOfBlog.idp
+            userOfBlog: {
+                userOfBlog: blog.userOfBlog.id,
+                username: blog.userOfBlog.username,
+                name: blog.userOfBlog.name
+            }
+
         };
-        updateLikes(blog.id,newLike);
+        await updateLikes(blog.id,newLike);
+    };
+
+    const deleteBlog = () => {
+        if(window.confirm('estas seguro de eliminar el blog para siempre')){
+            handleBlogDelete(blog.id);
+        }
     };
 
     return (
@@ -27,6 +41,7 @@ const Blog = ({ blog, updateLikes }) => {
                     <p>{`URL: ${blog.url}`}</p>
                     <p>{`Likes: ${blog.likes}`} <button onClick={addLike}>like</button> </p>
                     <p>{`Author: ${blog.author}`}</p>
+                    {(blog.userOfBlog.id || blog.userOfBlog) === token.id ? <button onClick={deleteBlog} >Delete</button> : ''}
                 </>
             )
                 : ''}

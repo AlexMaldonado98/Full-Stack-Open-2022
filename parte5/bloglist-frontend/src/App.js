@@ -13,9 +13,9 @@ const App = () => {
     const [blogs, setBlogs] = useState([]);
     const [user, setUser] = useState(null);
     const [message, setMessage] = useState(null);
-    
+
     const toggleRef = useRef();
-    
+
     useEffect(() => {
         blogService.getAll().then(blogs =>
             setBlogs(blogs)
@@ -80,15 +80,35 @@ const App = () => {
         }
     };
 
-    const updateLikes = async (id,newBlogLike) => {
+    const updateLikes = async (id, newBlogLike) => {
         try {
-            const response = await blogService.update(id,newBlogLike);
+            const response = await blogService.update(id, newBlogLike);
             setBlogs(blogs.map(blog => blog.id === response.id ? response : blog));
         } catch (error) {
             console.log(error.response.data.error);
+            setTimeout(() => {
+                setMessage(null);
+            }, 5000);
         }
 
 
+    };
+
+    const handleBlogDelete = async (id) => {
+        try {
+            await blogService.deleteBlog(id);
+            setBlogs(blogs.filter(blog => blog.id !== id));
+            setMessage('the blog was deleted');
+            setTimeout(() => {
+                setMessage(null);
+            }, 5000);
+
+        } catch (error) {
+            setMessage(`[ERROR] ${error.response.data.error}`);
+            setTimeout(() => {
+                setMessage(null);
+            }, 5000);
+        }
     };
 
     if (user === null) {
@@ -111,11 +131,12 @@ const App = () => {
             </Togglable>
             <h2>blogs</h2>
             {
-                blogs.sort((a , b) => {
+                blogs.sort((a, b) => {
                     return a.likes - b.likes;
                 }).map(blog =>
-                    <Blog key={blog.id} blog={blog} updateLikes={updateLikes}/>
-                )}
+                    <Blog key={blog.id} blog={blog} updateLikes={updateLikes} user={user} handleBlogDelete={handleBlogDelete} />
+                )
+            }
         </div>
     );
 };
