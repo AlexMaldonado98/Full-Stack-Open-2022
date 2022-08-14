@@ -1,14 +1,16 @@
 import '@testing-library/jest-dom';
-import { render } from '@testing-library/react';
+import { render, fireEvent} from '@testing-library/react';
 import Blog from './Blog';
 import { loginUser } from '../services/login';
-
+import jwt from 'jwt-decode';
 
 describe('Component Blog',() => {
     let user = null;
+    let tokenInfo = null;
     beforeAll(async () => {
         const dataUser = {username:'alexuser', passwordHash: 'alexpass'};
         user = await loginUser(dataUser);
+        tokenInfo = jwt(user.token);
     });
 
 
@@ -27,6 +29,28 @@ describe('Component Blog',() => {
         expect(component.container.querySelector('.container-blog')).toHaveTextContent('Title: React is easy');
         expect(component.container.querySelector('.container-blog')).toHaveTextContent('Author: alex maldonado');
         expect(component.container.querySelector('.container-blog')).not.toHaveTextContent('www.google.com');
+        
+    });
+    
+    test('show url and likes for default',() => {
+        const blogToShow = {
+            title: 'React is easy',
+            author: 'alex maldonado',
+            url: 'www.google.com',
+            likes: 999,
+            userOfBlog: tokenInfo.id
+        };
 
+        const component = render(
+            <Blog blog={blogToShow} user={user}/>
+        );
+
+        const button = component.container.querySelector('button');
+        fireEvent.click(button);
+        
+        expect(component.container.querySelector('.container-blog')).toHaveTextContent('URL: www.google.com');
+        expect(component.container.querySelector('.container-blog')).toHaveTextContent('Likes: 999');
+        expect(button).not.toHaveTextContent('show');
+        
     });
 });
