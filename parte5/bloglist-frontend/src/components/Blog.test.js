@@ -53,4 +53,29 @@ describe('Component Blog',() => {
         expect(button).not.toHaveTextContent('show');
         
     });
+
+    test('doing two click in button like',() => {
+        const mockHandler = jest.fn();
+        const blogToShow = {
+            title: 'React is easy',
+            author: 'alex maldonado',
+            url: 'www.google.com',
+            likes: 999,
+            userOfBlog: tokenInfo.id
+        };
+
+        const component = render(
+            <Blog blog={blogToShow} user={user} updateLikes={mockHandler}/>
+        );
+
+        const button = component.container.querySelector('button');
+        fireEvent.click(button);
+
+
+        const buttonLike = component.container.querySelector('.button-like');
+        fireEvent.click(buttonLike);
+        fireEvent.click(buttonLike);
+        
+        expect(mockHandler.mock.calls).toHaveLength(2);
+    });
 });

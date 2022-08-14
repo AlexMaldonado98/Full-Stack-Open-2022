@@ -39,7 +39,7 @@ const Blog = ({ blog, updateLikes, user, handleBlogDelete }) => {
             {visible === true ? (
                 <>
                     <p>{`URL: ${blog.url}`}</p>
-                    <p>{`Likes: ${blog.likes}`} <button onClick={addLike}>like</button> </p>
+                    <p>{`Likes: ${blog.likes}`} <button className='button-like' onClick={addLike}>like</button> </p>
                     <p>{`Author: ${blog.author}`}</p>
                     {(blog.userOfBlog.id || blog.userOfBlog) === token.id ? <button onClick={deleteBlog} >Delete</button> : ''}
                 </>
