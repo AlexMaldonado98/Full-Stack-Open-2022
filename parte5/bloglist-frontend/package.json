@@ -15,7 +15,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test src/components/BlogForm.test.js",
     "eslint": "eslint .",
     "eject": "react-scripts eject"
   },

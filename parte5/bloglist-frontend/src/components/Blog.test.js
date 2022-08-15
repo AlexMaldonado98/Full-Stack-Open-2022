@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent} from '@testing-library/react';
 import Blog from './Blog';
 import { loginUser } from '../services/login';
