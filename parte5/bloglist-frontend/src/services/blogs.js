@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseUrl = 'http://localhost:3001/api/blogs';
+const baseUrl = 'http://localhost:3006/api/blogs';
 
 let formatToken = null;
 

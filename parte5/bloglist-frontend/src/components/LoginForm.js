@@ -24,7 +24,7 @@ export const LoginForm = ({handleLogin}) => {
                     onChange={({ target }) => setUserName(target.value)}
                 />
             </div>
-            <div>password
+            <div>Password
                 <input
                     type='password'
                     name='Password'
