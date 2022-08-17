@@ -30,7 +30,7 @@ describe('Blog app', () => {
         });
     });
 
-    describe('When logged in', () => {
+    describe.only('When logged in', () => {
         beforeEach(() => {
             const user = {
                 username: 'alextest',
@@ -46,6 +46,22 @@ describe('Blog app', () => {
             cy.get('input[name=url]').type('www.test.com');
             cy.contains('create blog').click();
             cy.contains('Title: I\'m a new blog Author: Alex Maldonado' );
+            cy.contains('A new blog I\'m a new blog by Alex Maldonado added');
+        });
+        
+        it('pressing the like button 2 times', () => {
+            cy.contains('New Blog').click();
+            cy.get('input[name=title]').type('I\'m a new blog');
+            cy.get('input[name=author]').type('Alex Maldonado');
+            cy.get('input[name=url]').type('www.test.com');
+            cy.contains('create blog').click();
+            cy.contains('Title: I\'m a new blog Author: Alex Maldonado' );
+            cy.contains('A new blog I\'m a new blog by Alex Maldonado added');
+            cy.contains('show').click();
+            cy.get('.button-like').click();
+            cy.wait(500);
+            cy.get('.button-like').click();
+            cy.contains('Likes: 2');
         });
     });
 });

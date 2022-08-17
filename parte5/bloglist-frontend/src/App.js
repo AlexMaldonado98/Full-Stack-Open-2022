@@ -85,7 +85,7 @@ const App = () => {
             const response = await blogService.update(id, newBlogLike);
             setBlogs(blogs.map(blog => blog.id === response.id ? response : blog));
         } catch (error) {
-            console.log(error.response.data.error);
+            console.log(error.response);
             setTimeout(() => {
                 setMessage(null);
             }, 5000);
@@ -132,7 +132,7 @@ const App = () => {
             <h2>blogs</h2>
             {
                 blogs.sort((a, b) => {
-                    return a.likes - b.likes;
+                    return b.likes - a.likes;
                 }).map(blog =>
                     <Blog key={blog.id} blog={blog} updateLikes={updateLikes} user={user} handleBlogDelete={handleBlogDelete} />
                 )

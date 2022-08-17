@@ -10,20 +10,15 @@ const Blog = ({ blog, updateLikes, user, handleBlogDelete }) => {
         setVisible(!visible);
     };
 
-    const addLike = async () => {
+    const addLike = () => {
         const newLike = {
             title: blog.title,
             author: blog.author,
             url: blog.url,
             likes: blog.likes + 1,
-            userOfBlog: {
-                userOfBlog: blog.userOfBlog.id,
-                username: blog.userOfBlog.username,
-                name: blog.userOfBlog.name
-            }
-
+            userOfBlog: blog.userOfBlog.id
         };
-        await updateLikes(blog.id,newLike);
+        updateLikes(blog.id,newLike);
     };
 
     const deleteBlog = () => {
