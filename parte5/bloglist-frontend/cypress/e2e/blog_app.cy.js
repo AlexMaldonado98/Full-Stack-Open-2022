@@ -37,31 +37,57 @@ describe('Blog app', () => {
                 passwordHash: 'alexpass'
             };
             cy.login(user);
+            cy.addBlog({title:'I\'m a new blog', author:'Alex Maldonado', url:'www.test.com'});
         });
 
         it('A blog can be created',() => {
-            cy.contains('New Blog').click();
-            cy.get('input[name=title]').type('I\'m a new blog');
-            cy.get('input[name=author]').type('Alex Maldonado');
-            cy.get('input[name=url]').type('www.test.com');
-            cy.contains('create blog').click();
             cy.contains('Title: I\'m a new blog Author: Alex Maldonado' );
-            cy.contains('A new blog I\'m a new blog by Alex Maldonado added');
         });
         
         it('pressing the like button 2 times', () => {
-            cy.contains('New Blog').click();
-            cy.get('input[name=title]').type('I\'m a new blog');
-            cy.get('input[name=author]').type('Alex Maldonado');
-            cy.get('input[name=url]').type('www.test.com');
-            cy.contains('create blog').click();
             cy.contains('Title: I\'m a new blog Author: Alex Maldonado' );
-            cy.contains('A new blog I\'m a new blog by Alex Maldonado added');
             cy.contains('show').click();
             cy.get('.button-like').click();
             cy.wait(500);
             cy.get('.button-like').click();
             cy.contains('Likes: 2');
+        });
+        
+        it('the user deletes his blog', () => {
+            cy.contains('show').click();
+            cy.contains('Delete').click();
+            cy.get('html').should('not.contain', 'Title: I\'m a new blog Author: Alex Maldonado' );
+        });
+
+        describe.only('ordered by the number of likes', () => {
+            it('from highest to lowest',() => {
+                //Adding two more blogs/there are totally tree blogs
+                cy.addBlog({title: 'second blog',author:'second', url: 'www.second.com'});
+                cy.addBlog({title: 'third blog',author:'third', url: 'www.third.com'});
+                cy.contains('third blog');
+
+                //ADDING LIKES
+
+                //TWO LIKES. TITLE: I'm a new blog Author
+                cy.get('.container-blog').eq(0).find('button').click();
+                cy.contains('like').click().wait(500).click().parent().parent().contains('hide').click();
+
+                //ONE LIKE. TITLE: second blog
+                cy.get('.container-blog').eq(1).find('button').click();
+                cy.contains('like').click().parent().parent().contains('hide').click();
+
+                //TREE LIKES TITLE: third blog
+                cy.get('.container-blog').eq(2).find('button').click();
+                cy.contains('like').click().wait(500).click().wait(500).click().parent().parent().contains('hide').click();
+                
+                //expect
+                cy.get('.container-blog').eq(0).contains('third blog');
+
+                cy.get('.container-blog').eq(1).contains('I\'m a new blog');
+
+                cy.get('.container-blog').eq(2).contains('second blog');
+
+            });
         });
     });
 });
