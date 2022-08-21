@@ -11,7 +11,8 @@ export const AnecdoteList = () => {
             console.log('emtre');
             const anecdotes = state.anecdotes
             console.log(anecdotes[0].content);
-            return anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter) ? anecdote : '')
+            return anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter))
+            
         }
     })
     const dispatch = useDispatch(); 
