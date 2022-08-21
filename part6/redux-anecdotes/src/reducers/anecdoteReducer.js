@@ -7,12 +7,11 @@ export const addVote = (id) => {
   }
 }
 
-export const addAnecdote = (content) => {
+export const addAnecdote = (anecdote) => {
   return {
     type: 'NEW_ANECDOTE',
     data: {
-      content,
-      votes: 0
+      anecdote
     }
   }
 };
@@ -38,7 +37,7 @@ const reducer = (state = [], action) => {
 
       return state.map(anecdote => anecdote.id === id ? updateAnecdote : anecdote);
     case 'NEW_ANECDOTE':
-      return [...state,action.data];
+      return [...state,action.data.anecdote];
 
     case 'INIT':
       return action.data.anecdotes
