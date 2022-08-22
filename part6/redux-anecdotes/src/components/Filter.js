@@ -6,8 +6,9 @@ export const Filter = () => {
     const dispatch = useDispatch();
 
     const handleFilter = (event) => {
+      event.preventDefault();
         const content = event.target.value;
-        dispatch(activeFilter(content));
+        dispatch(activeFilter({filterText: content}));
         
     };
    

@@ -1,5 +1,21 @@
+import { createSlice } from "@reduxjs/toolkit"
 
-export const activeFilter = (filterText) => {
+const filterSlice = createSlice({
+    name: 'filter',
+    initialState: null,
+    reducers: {
+        activeFilter(state,action){
+            state = action.payload.filterText
+            return state
+        }
+    }
+
+})
+
+export const {activeFilter} = filterSlice.actions
+export default filterSlice.reducer
+
+/* export const activeFilter = (filterText) => {
     return {
         type: 'ACTIVE',
         data: {
@@ -15,6 +31,6 @@ const reducer = (state = null , action) => {
         default:
             return state
     }
-}
+} */
 
-export default reducer;
+// export default reducer;
