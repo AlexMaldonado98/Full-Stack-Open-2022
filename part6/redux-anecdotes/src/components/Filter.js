@@ -1,19 +1,17 @@
-import { useDispatch } from "react-redux/es/exports";
+import { connect } from "react-redux";
 import { activeFilter } from "../reducers/filterReducer";
 
-export const Filter = () => {
-
-    const dispatch = useDispatch();
-
-    const handleFilter = (event) => {
-        const content = event.target.value;
-        dispatch(activeFilter(content));
-        
-    };
+const Filter = (props) => {
    
    return(
       <div>
-        Filter: <input type='text' name='filter' onChange={handleFilter} />
+        Filter: <input type='text' name='filter' onChange={({target}) => props.activeFilter(target.value)} />
       </div>
    );
 };
+
+const randomName = {
+  activeFilter
+}
+
+export default connect(null,randomName)(Filter)

@@ -1,41 +1,42 @@
-import { useSelector, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { addVote } from "../reducers/anecdoteReducer";
 import { showNotification } from "../reducers/notificationReducer";
 
-export const AnecdoteList = () => {
-    const filter = useSelector(state => state.filter)
-    const anecdotes = useSelector(state => {
-        if(!filter){
-            return state.anecdotes
-        }else{
-            console.log('emtre');
-            const anecdotes = state.anecdotes
-            console.log(anecdotes[0].content);
-            return anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(filter))
-            
-        }
-    })
-    const dispatch = useDispatch(); 
-    
-    const vote = (anecdote) => {
-        const {id} = anecdote
-        dispatch(addVote(anecdote))
-        dispatch(showNotification(`you voted ${anecdotes.find(anecdote => anecdote.id === id).content}`,5));
-    }
+const AnecdoteList = (props) => {
 
     return (
         <>
-            {[...anecdotes].sort((a, b) => b.votes - a.votes).map(anecdote =>
+            {[...props.anecdotes].sort((a, b) => b.votes - a.votes).map(anecdote =>
                 <div key={anecdote.id}>
                     <div >
                         {anecdote.content}
                     </div> 
                     <div>
                         has {anecdote.votes}
-                        <button onClick={() => vote(anecdote)}>vote</button>
+                        <button onClick={() => {
+                            props.addVote(anecdote);
+                            props.showNotification(`you voted ${anecdote.content}`,5);
+                        }}>vote</button>
                     </div>
                 </div>
             )}
         </>
     );
 };
+
+const mapStateToProps = (state) => {
+    if(!state.filter){
+        return {anecdotes: state.anecdotes}
+    }else{
+        const anecdotes = state.anecdotes
+        return {anecdotes: anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(state.filter))}
+        
+    }
+}
+
+const mapDispatchToState = {
+    addVote,
+    showNotification
+}
+
+export default connect(mapStateToProps,mapDispatchToState)(AnecdoteList);
