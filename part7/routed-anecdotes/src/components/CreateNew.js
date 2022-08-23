@@ -5,9 +5,9 @@ const CreateNew = (props) => {
     // const [content, setContent] = useState('')
     /* const [author, setAuthor] = useState('')
     const [info, setInfo] = useState('') */
-    const content = useField('text');
-    const author = useField('text');
-    const info = useField('text');
+    const {reset: resetContent,...content} = useField('text');
+    const {reset: resetAuthor,...author} = useField('text');
+    const {reset: resetInfo,...info} = useField('text');
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -21,9 +21,9 @@ const CreateNew = (props) => {
     }
 
     const reset = () => {
-        content.reset();
-        author.reset();
-        info.reset();
+        resetContent();
+        resetAuthor();
+        resetInfo();
     };
 
     
