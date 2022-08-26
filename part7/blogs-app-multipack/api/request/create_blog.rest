@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZXh1c2VyIiwiaWQiOiI2MmVhZjliZTk1M2I2MjJlZTQwMDhlOWIiLCJpYXQiOjE2NTk4Mjc3MzIsImV4cCI6MTY1OTkxNDEzMn0.8MvRSdhapYNUgj5sopEeSR7PGYQadao-ad2neH0a1Ww
+
+{
+    "title": "mi primer blog",
+    "author": "Alex",
+    "url": "google.1",
+    "likes": 0
+} 

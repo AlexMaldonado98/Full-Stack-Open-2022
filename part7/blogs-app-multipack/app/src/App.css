@@ -1,0 +1,28 @@
+.message-error{
+    color: red;
+    font-size: 20px;
+    font-weight: 700;
+    border: 5px solid red;
+    padding: 15px;
+    max-width: 50%;
+    text-align: center;
+}
+
+.message-success{
+    color: green;
+    font-size: 20px;
+    font-weight: 700;
+    border: 5px solid green;
+    padding: 15px;
+    max-width: 30%;
+    text-align: center;
+}
+
+.container-blog{
+    border: 3px solid black;
+    margin: 5px;
+    padding-top: 7px;
+    padding-inline: 4px;
+    padding-bottom: 3px;
+    justify-content: center;
+}
