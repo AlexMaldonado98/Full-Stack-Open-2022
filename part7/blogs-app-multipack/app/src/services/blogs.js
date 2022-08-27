@@ -8,8 +8,8 @@ const setToken = (token) => {
 };
 
 const getAll = () => {
-    const request = axios.get(baseUrl);
-    return request.then(response => response.data);
+    const request = axios.get(baseUrl).then(response => response.data);
+    return request;
 };
 
 const create = async (newObject) => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
@@ -8,12 +9,14 @@ import { Notifications } from './components/Notification';
 import './App.css';
 import Togglable from './components/Togglable';
 import { ShowNotification } from './reducer/notificationReducer';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addBlog, getInitalBlogs } from './reducer/blogsReducer';
 
 
 
 const App = () => {
-    const [blogs, setBlogs] = useState([]);
+    /* const [blogs, setBlogs] = useState([]); */
+    const blogs = useSelector(state => state.blogs);
     const [user, setUser] = useState(null);
     const [message, setMessage] = useState(null);
 
@@ -21,9 +24,7 @@ const App = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        blogService.getAll().then(blogs =>
-            setBlogs(blogs)
-        );
+        dispatch(getInitalBlogs());
     }, []);
 
     useEffect(() => {
@@ -43,10 +44,6 @@ const App = () => {
                 blogService.setToken(user.token);
                 setUser(user);
                 dispatch(ShowNotification('Login success',5000));
-                /* setMessage('Login success');
-                setTimeout(() => {
-                    setMessage(null);
-                }, 3000); */
             } catch (error) {
                 dispatch(ShowNotification(`[ERROR] ${error.response.data.error}`,5000));
             }
@@ -64,9 +61,8 @@ const App = () => {
     const handleNewBlog = async (title, author, url) => {
         try {
             console.log(title,author,url);
-            const response = await blogService.create({ title, author, url });
-            setBlogs([...blogs, response]);
-            dispatch(ShowNotification(`A new blog ${response.title} by ${response.author} added`,5000));
+            dispatch(addBlog({ title,author,url }));
+            dispatch(ShowNotification(`A new blog ${title} by ${author} added`,5000));
         } catch (error) {
             if(error.response.data.error === 'the token expired'){
                 dispatch(ShowNotification('[ERROR] Sesion caducada, vuelva a iniciar sesion',5000));
@@ -78,22 +74,20 @@ const App = () => {
 
     const updateLikes = async (id, newBlogLike) => {
         try {
-            const response = await blogService.update(id, newBlogLike);
-            setBlogs(blogs.map(blog => blog.id === response.id ? response : blog));
+            // const response = await blogService.update(id, newBlogLike);
+            // setBlogs(blogs.map(blog => blog.id === response.id ? response : blog));
         } catch (error) {
             console.log(error.response);
             setTimeout(() => {
                 setMessage(null);
             }, 5000);
         }
-
-
     };
 
     const handleBlogDelete = async (id) => {
         try {
-            await blogService.deleteBlog(id);
-            setBlogs(blogs.filter(blog => blog.id !== id));
+            // await blogService.deleteBlog(id);
+            // setBlogs(blogs.filter(blog => blog.id !== id));
             dispatch(ShowNotification('the blog was deleted',5000));
         } catch (error) {
             dispatch(ShowNotification(`[ERROR] ${error.response.data.error}`,5000));
@@ -120,7 +114,7 @@ const App = () => {
             </Togglable>
             <h2>blogs</h2>
             {
-                blogs.sort((a, b) => {
+                [...blogs].sort((a, b) => {
                     return b.likes - a.likes;
                 }).map(blog =>
                     <Blog key={blog.id} blog={blog} updateLikes={updateLikes} user={user} handleBlogDelete={handleBlogDelete} />
