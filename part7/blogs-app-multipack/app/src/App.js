@@ -7,6 +7,9 @@ import { BlogForm } from './components/BlogForm';
 import { Notifications } from './components/Notification';
 import './App.css';
 import Togglable from './components/Togglable';
+import { ShowNotification } from './reducer/notificationReducer';
+import { useDispatch } from 'react-redux';
+
 
 
 const App = () => {
@@ -15,6 +18,7 @@ const App = () => {
     const [message, setMessage] = useState(null);
 
     const toggleRef = useRef();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
@@ -38,22 +42,16 @@ const App = () => {
                 window.localStorage.setItem('userCredentials', JSON.stringify(user));
                 blogService.setToken(user.token);
                 setUser(user);
-                setMessage('Login success');
+                dispatch(ShowNotification('Login success',5000));
+                /* setMessage('Login success');
                 setTimeout(() => {
                     setMessage(null);
-                }, 3000);
+                }, 3000); */
             } catch (error) {
-                setMessage(`[ERROR] ${error.response.data.error}`);
-                setTimeout(() => {
-                    setMessage(null);
-                }, 3000);
+                dispatch(ShowNotification(`[ERROR] ${error.response.data.error}`,5000));
             }
         } else {
-            setMessage('[ERROR] You need to fill in all the fields');
-            setTimeout(() => {
-                setMessage(null);
-            }, 5000);
-
+            dispatch(ShowNotification('[ERROR] You need to fill in all the fields',5000));
         }
     };
 
@@ -65,28 +63,16 @@ const App = () => {
 
     const handleNewBlog = async (title, author, url) => {
         try {
+            console.log(title,author,url);
             const response = await blogService.create({ title, author, url });
             setBlogs([...blogs, response]);
-            setMessage(`A new blog ${response.title} by ${response.author} added`);
-            toggleRef.current.toggleVisibility();
-            setTimeout(() => {
-                setMessage(null);
-            }, 5000);
+            dispatch(ShowNotification(`A new blog ${response.title} by ${response.author} added`,5000));
         } catch (error) {
             if(error.response.data.error === 'the token expired'){
-                setMessage('[ERROR] Sesion caducada, vuelva a iniciar sesion');
-                setTimeout(() => {
-                    setMessage(null);
-                    window.localStorage.removeItem('userCredentials');
-                    setUser(null);
-                }, 5000);
+                dispatch(ShowNotification('[ERROR] Sesion caducada, vuelva a iniciar sesion',5000));
                 return;
             }
-
-            setMessage('[ERROR] the title and url is required');
-            setTimeout(() => {
-                setMessage(null);
-            }, 5000);
+            dispatch(ShowNotification('[ERROR] the title and url is required',5000));
         }
     };
 
@@ -108,16 +94,9 @@ const App = () => {
         try {
             await blogService.deleteBlog(id);
             setBlogs(blogs.filter(blog => blog.id !== id));
-            setMessage('the blog was deleted');
-            setTimeout(() => {
-                setMessage(null);
-            }, 5000);
-
+            dispatch(ShowNotification('the blog was deleted',5000));
         } catch (error) {
-            setMessage(`[ERROR] ${error.response.data.error}`);
-            setTimeout(() => {
-                setMessage(null);
-            }, 5000);
+            dispatch(ShowNotification(`[ERROR] ${error.response.data.error}`,5000));
         }
     };
 
@@ -132,7 +111,7 @@ const App = () => {
 
     return (
         <div>
-            <Notifications message={message} />
+            <Notifications/>
             <span>{`user: ${user.username} logged in`}</span>
             <button onClick={handleLogout}>logout</button>
             <h1>create new</h1>

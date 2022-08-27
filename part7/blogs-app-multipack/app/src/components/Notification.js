@@ -1,12 +1,15 @@
+import { useSelector } from 'react-redux/es/exports';
+export const Notifications = () => {
+    const contentReducer = useSelector(state => state.notification);
 
-export const Notifications = ({ message }) => {
-    if(message === null){
+    if(contentReducer === null){
+        console.log('entre null');
         return null;
     }
 
-    if(message.includes('[ERROR]')){
-        return <p className="message-error">{message.slice(7,message.length)}</p>;
+    if(contentReducer?.includes('[ERROR]')){
+        return <p className="message-error">{contentReducer.slice(7,contentReducer.length)}</p>;
     }else{
-        return <p className="message-success">{message}</p>;
+        return <p className="message-success">{contentReducer}</p>;
     }
 };

@@ -12,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1 ",
     "build": "npm run build --workspaces=app",
     "start": "npm run start --workspaces=api",
-    "dev:api": "npm run build && npm run dev --workspaces=api",
+    "dev:api": "npm run build --workspaces=app && npm run dev --workspaces=api",
     "eslint": "eslint ./api ./app"
   },
   "eslintConfig": {

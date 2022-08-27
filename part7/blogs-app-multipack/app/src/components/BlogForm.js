@@ -5,7 +5,7 @@ export const BlogForm = ({ handleNewBlog }) => {
 
     const handleFormChange = ({ target }) => {
         const { name,value } = target;
-        setNewBlog({ ...newBlog, [name]:value });
+        setNewBlog({ ...newBlog, [name]: value });
     };
 
     const handleBlog = (event) => {
