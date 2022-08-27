@@ -3,7 +3,6 @@ export const Notifications = () => {
     const contentReducer = useSelector(state => state.notification);
 
     if(contentReducer === null){
-        console.log('entre null');
         return null;
     }
 

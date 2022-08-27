@@ -10,7 +10,7 @@ import './App.css';
 import Togglable from './components/Togglable';
 import { ShowNotification } from './reducer/notificationReducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { addBlog, getInitalBlogs } from './reducer/blogsReducer';
+import { addBlog, addBlogWithNewLike, deleteBlog, getInitalBlogs } from './reducer/blogsReducer';
 
 
 
@@ -60,7 +60,6 @@ const App = () => {
 
     const handleNewBlog = async (title, author, url) => {
         try {
-            console.log(title,author,url);
             dispatch(addBlog({ title,author,url }));
             dispatch(ShowNotification(`A new blog ${title} by ${author} added`,5000));
         } catch (error) {
@@ -72,10 +71,9 @@ const App = () => {
         }
     };
 
-    const updateLikes = async (id, newBlogLike) => {
+    const updateLikes = async (newBlogLike) => {
         try {
-            // const response = await blogService.update(id, newBlogLike);
-            // setBlogs(blogs.map(blog => blog.id === response.id ? response : blog));
+            dispatch(addBlogWithNewLike(newBlogLike));
         } catch (error) {
             console.log(error.response);
             setTimeout(() => {
@@ -86,8 +84,7 @@ const App = () => {
 
     const handleBlogDelete = async (id) => {
         try {
-            // await blogService.deleteBlog(id);
-            // setBlogs(blogs.filter(blog => blog.id !== id));
+            dispatch(deleteBlog(id));
             dispatch(ShowNotification('the blog was deleted',5000));
         } catch (error) {
             dispatch(ShowNotification(`[ERROR] ${error.response.data.error}`,5000));
