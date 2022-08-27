@@ -11,13 +11,15 @@ import Togglable from './components/Togglable';
 import { ShowNotification } from './reducer/notificationReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { addBlog, addBlogWithNewLike, deleteBlog, getInitalBlogs } from './reducer/blogsReducer';
+import { getUserFromStorage, loginUserCredentials, logoutSesion } from './reducer/loginReducer';
 
 
 
 const App = () => {
     /* const [blogs, setBlogs] = useState([]); */
     const blogs = useSelector(state => state.blogs);
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState(null);
+    const user = useSelector(state => state.login);
     const [message, setMessage] = useState(null);
 
     const toggleRef = useRef();
@@ -32,21 +34,13 @@ const App = () => {
         if (userCredentials) {
             const user = JSON.parse(userCredentials);
             blogService.setToken(user.token);
-            setUser(user);
+            dispatch(getUserFromStorage(user));
         }
     }, []);
 
     const handleLogin = async (userName, password) => {
         if (userName && password !== '') {
-            try {
-                const user = await loginUser({ username: userName, passwordHash: password });
-                window.localStorage.setItem('userCredentials', JSON.stringify(user));
-                blogService.setToken(user.token);
-                setUser(user);
-                dispatch(ShowNotification('Login success',5000));
-            } catch (error) {
-                dispatch(ShowNotification(`[ERROR] ${error.response.data.error}`,5000));
-            }
+            dispatch(loginUserCredentials({ userName,password }));
         } else {
             dispatch(ShowNotification('[ERROR] You need to fill in all the fields',5000));
         }
@@ -55,7 +49,7 @@ const App = () => {
     const handleLogout = (event) => {
         event.preventDefault();
         window.localStorage.removeItem('userCredentials');
-        setUser(null);
+        dispatch(logoutSesion());
     };
 
     const handleNewBlog = async (title, author, url) => {
