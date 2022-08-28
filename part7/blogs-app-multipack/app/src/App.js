@@ -8,13 +8,14 @@ import { BlogForm } from './components/BlogForm';
 import { Notifications } from './components/Notification';
 import './App.css';
 import Togglable from './components/Togglable';
-import { ShowNotification } from './reducer/notificationReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { addBlog, getInitalBlogs } from './reducer/blogsReducer';
-import { getUserFromStorage, loginUserCredentials, logoutSesion } from './reducer/loginReducer';
-import { Routes, Route } from 'react-router-dom';
+import { getUserFromStorage, logoutSesion } from './reducer/loginReducer';
+import { onloadUsers } from './reducer/usersReducer';
+import { Routes, Route, useMatch } from 'react-router-dom';
 import { Users } from './components/Users';
 import { BlogList } from './components/BlogList';
+import { User } from './components/User';
 
 
 const App = () => {
@@ -24,6 +25,7 @@ const App = () => {
 
     useEffect(() => {
         dispatch(getInitalBlogs());
+        dispatch(onloadUsers());
     }, []);
 
     useEffect(() => {
@@ -35,14 +37,6 @@ const App = () => {
         }
     }, []);
 
-    const handleLogin = async (userName, password) => {
-        if (userName && password !== '') {
-            dispatch(loginUserCredentials({ userName, password }));
-        } else {
-            dispatch(ShowNotification('[ERROR] You need to fill in all the fields', 5000));
-        }
-    };
-
     const handleLogout = (event) => {
         event.preventDefault();
         window.localStorage.removeItem('userCredentials');
@@ -53,7 +47,7 @@ const App = () => {
         return (
             <>
                 <Notifications />
-                <LoginForm handleLogin={handleLogin} />
+                <LoginForm />
             </>
         );
     }
@@ -71,6 +65,7 @@ const App = () => {
             <Routes>
                 <Route path='/' element={<BlogList />} />
                 <Route path='/users' element={<Users />} />
+                <Route path='/users/:id' element={<User />} />
             </Routes>
         </div>
     );
