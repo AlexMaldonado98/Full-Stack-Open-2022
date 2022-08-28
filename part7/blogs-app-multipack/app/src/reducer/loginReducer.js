@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { loginUser } from '../services/login';
 import { ShowNotification } from './notificationReducer';
+import servicesBlog from '../services/blogs';
 
 const loginReducer = createSlice({
     name: 'login',
@@ -24,6 +25,7 @@ export const loginUserCredentials = (userData) => {
     return async(dispatch) => {
         try {
             const user = await loginUser({ username: userData.userName, passwordHash: userData.password });
+            servicesBlog.setToken(user.token);
             window.localStorage.setItem('userCredentials',JSON.stringify(user));
             dispatch(login(user));
         } catch (error) {

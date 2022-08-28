@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import servicesBLogs from '../services/blogs';
+import { ShowNotification } from './notificationReducer';
 
 const blogSlice = createSlice({
     name: 'blogs',
@@ -42,8 +43,12 @@ export const addBlog = (objValues) => {
 
 export const addBlogWithNewLike = (blogWithNewLike) => {
     return async (dispatch) => {
-        const result = await servicesBLogs.update(blogWithNewLike.id,blogWithNewLike);
-        dispatch(addLike(result));
+        try {
+            const result = await servicesBLogs.update(blogWithNewLike.id,blogWithNewLike);
+            dispatch(addLike(result));
+        } catch (error) {
+            dispatch(ShowNotification(error,5000));
+        }
     };
 };
 

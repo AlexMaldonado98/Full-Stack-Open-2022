@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import jwt from 'jwt-decode';
+import { useDispatch } from 'react-redux';
+import { addBlogWithNewLike } from '../reducer/blogsReducer';
+import { ShowNotification } from '../reducer/notificationReducer';
 
-const Blog = ({ blog, updateLikes, user, handleBlogDelete }) => {
+const Blog = ({ blog, user }) => {
     const [visible, setVisible] = useState(false);
+    const dispatch = useDispatch();
 
     const token = jwt(user.token);
 
@@ -16,12 +20,17 @@ const Blog = ({ blog, updateLikes, user, handleBlogDelete }) => {
             likes: blog.likes + 1,
             userOfBlog: blog.userOfBlog.id
         };
-        updateLikes(newLike);
+        dispatch(addBlogWithNewLike(newLike));
     };
 
     const deleteBlog = () => {
         if(window.confirm('estas seguro de eliminar el blog para siempre')){
-            handleBlogDelete(blog.id);
+            try {
+                dispatch(deleteBlog(blog.id));
+                dispatch(ShowNotification('the blog was deleted', 5000));
+            } catch (error) {
+                dispatch(ShowNotification(`[ERROR] ${error.response.data.error}`, 5000));
+            }
         }
     };
 

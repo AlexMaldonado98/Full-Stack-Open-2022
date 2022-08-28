@@ -1,7 +1,11 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { ShowNotification } from '../reducer/notificationReducer';
+import { addBlog } from '../reducer/blogsReducer';
 
-export const BlogForm = ({ handleNewBlog }) => {
+export const BlogForm = () => {
     const [newBlog, setNewBlog] = useState({ title:'',author:'',url:'' });
+    const dispatch = useDispatch();
 
     const handleFormChange = ({ target }) => {
         const { name,value } = target;
@@ -10,8 +14,17 @@ export const BlogForm = ({ handleNewBlog }) => {
 
     const handleBlog = (event) => {
         event.preventDefault();
-        handleNewBlog(newBlog.title,newBlog.author,newBlog.url);
-        setNewBlog({ title:'',author:'',url:'' });
+        try {
+            dispatch(addBlog({ title:newBlog.title, author:newBlog.author, url:newBlog.url }));
+            dispatch(ShowNotification(`A new blog ${newBlog.title} by ${newBlog.author} added`, 5000));
+            setNewBlog({ title:'',author:'',url:'' });
+        } catch (error) {
+            if (error.response.data.error === 'the token expired') {
+                dispatch(ShowNotification('[ERROR] Sesion caducada, vuelva a iniciar sesion', 5000));
+                return;
+            }
+            dispatch(ShowNotification('[ERROR] the title and url is required', 5000));
+        }
     };
 
     return(

@@ -10,18 +10,15 @@ import './App.css';
 import Togglable from './components/Togglable';
 import { ShowNotification } from './reducer/notificationReducer';
 import { useDispatch, useSelector } from 'react-redux';
-import { addBlog, addBlogWithNewLike, deleteBlog, getInitalBlogs } from './reducer/blogsReducer';
+import { addBlog, getInitalBlogs } from './reducer/blogsReducer';
 import { getUserFromStorage, loginUserCredentials, logoutSesion } from './reducer/loginReducer';
-
+import { Routes, Route } from 'react-router-dom';
+import { Users } from './components/Users';
+import { BlogList } from './components/BlogList';
 
 
 const App = () => {
-    /* const [blogs, setBlogs] = useState([]); */
-    const blogs = useSelector(state => state.blogs);
-    // const [user, setUser] = useState(null);
     const user = useSelector(state => state.login);
-    const [message, setMessage] = useState(null);
-
     const toggleRef = useRef();
     const dispatch = useDispatch();
 
@@ -40,9 +37,9 @@ const App = () => {
 
     const handleLogin = async (userName, password) => {
         if (userName && password !== '') {
-            dispatch(loginUserCredentials({ userName,password }));
+            dispatch(loginUserCredentials({ userName, password }));
         } else {
-            dispatch(ShowNotification('[ERROR] You need to fill in all the fields',5000));
+            dispatch(ShowNotification('[ERROR] You need to fill in all the fields', 5000));
         }
     };
 
@@ -52,43 +49,10 @@ const App = () => {
         dispatch(logoutSesion());
     };
 
-    const handleNewBlog = async (title, author, url) => {
-        try {
-            dispatch(addBlog({ title,author,url }));
-            dispatch(ShowNotification(`A new blog ${title} by ${author} added`,5000));
-        } catch (error) {
-            if(error.response.data.error === 'the token expired'){
-                dispatch(ShowNotification('[ERROR] Sesion caducada, vuelva a iniciar sesion',5000));
-                return;
-            }
-            dispatch(ShowNotification('[ERROR] the title and url is required',5000));
-        }
-    };
-
-    const updateLikes = async (newBlogLike) => {
-        try {
-            dispatch(addBlogWithNewLike(newBlogLike));
-        } catch (error) {
-            console.log(error.response);
-            setTimeout(() => {
-                setMessage(null);
-            }, 5000);
-        }
-    };
-
-    const handleBlogDelete = async (id) => {
-        try {
-            dispatch(deleteBlog(id));
-            dispatch(ShowNotification('the blog was deleted',5000));
-        } catch (error) {
-            dispatch(ShowNotification(`[ERROR] ${error.response.data.error}`,5000));
-        }
-    };
-
     if (user === null) {
         return (
             <>
-                <Notifications message={message} />
+                <Notifications />
                 <LoginForm handleLogin={handleLogin} />
             </>
         );
@@ -96,21 +60,18 @@ const App = () => {
 
     return (
         <div>
-            <Notifications/>
+            <Notifications />
             <span>{`user: ${user.username} logged in`}</span>
             <button onClick={handleLogout}>logout</button>
             <h1>create new</h1>
             <Togglable button={'New Blog'} ref={toggleRef} >
-                <BlogForm handleNewBlog={handleNewBlog} />
+                <BlogForm/>
             </Togglable>
             <h2>blogs</h2>
-            {
-                [...blogs].sort((a, b) => {
-                    return b.likes - a.likes;
-                }).map(blog =>
-                    <Blog key={blog.id} blog={blog} updateLikes={updateLikes} user={user} handleBlogDelete={handleBlogDelete} />
-                )
-            }
+            <Routes>
+                <Route path='/' element={<BlogList />} />
+                <Route path='/users' element={<Users />} />
+            </Routes>
         </div>
     );
 };

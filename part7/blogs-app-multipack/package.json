@@ -28,5 +28,10 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "install": "^0.13.0",
+    "npm": "^8.18.0",
+    "react-router-dom": "^6.3.0"
+  }
 }
