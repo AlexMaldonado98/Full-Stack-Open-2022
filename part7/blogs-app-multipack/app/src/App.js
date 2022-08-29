@@ -1,18 +1,17 @@
 /* eslint-disable no-unused-vars */
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
-import { loginUser } from './services/login';
 import { LoginForm } from './components/LoginForm';
 import { BlogForm } from './components/BlogForm';
 import { Notifications } from './components/Notification';
 import './App.css';
 import Togglable from './components/Togglable';
 import { useDispatch, useSelector } from 'react-redux';
-import { addBlog, getInitalBlogs } from './reducer/blogsReducer';
+import { getInitalBlogs } from './reducer/blogsReducer';
 import { getUserFromStorage, logoutSesion } from './reducer/loginReducer';
 import { onloadUsers } from './reducer/usersReducer';
-import { Routes, Route, useMatch } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Users } from './components/Users';
 import { BlogList } from './components/BlogList';
 import { User } from './components/User';
@@ -66,6 +65,7 @@ const App = () => {
                 <Route path='/' element={<BlogList />} />
                 <Route path='/users' element={<Users />} />
                 <Route path='/users/:id' element={<User />} />
+                <Route path='/blogs/:id' element={<Blog />} />
             </Routes>
         </div>
     );

@@ -1,19 +1,21 @@
-import { useState } from 'react';
 import jwt from 'jwt-decode';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addBlogWithNewLike } from '../reducer/blogsReducer';
 import { ShowNotification } from '../reducer/notificationReducer';
+import { useParams } from 'react-router-dom';
 
-const Blog = ({ blog, user }) => {
-    const [visible, setVisible] = useState(false);
+const Blog = () => {
     const dispatch = useDispatch();
 
+    const { id } = useParams();
+    const blog = useSelector(state => state.blogs.find(blog => blog.id === id));
+    const user = useSelector(state => state.login);
+
+    if(!blog){
+        return null;
+    }
+
     const token = jwt(user.token);
-
-    const toggleVisibility = () => {
-        setVisible(!visible);
-    };
-
     const addLike = () => {
         const newLike = {
             ...blog,
@@ -36,17 +38,11 @@ const Blog = ({ blog, user }) => {
 
     return (
         <div className='container-blog'>
-            {`Title: ${blog.title} Author: ${blog.author}`}
-            <button style={{ marginLeft: '10px' }} onClick={toggleVisibility} >{visible ? 'hide' : 'show'}</button>
-            {visible === true ? (
-                <>
-                    <p>{`URL: ${blog.url}`}</p>
-                    <p>{`Likes: ${blog.likes}`} <button className='button-like' onClick={addLike}>like</button> </p>
-                    <p>{`Author: ${blog.author}`}</p>
-                    {(blog.userOfBlog.id || blog.userOfBlog) === token.id ? <button onClick={deleteBlog} >Delete</button> : ''}
-                </>
-            )
-                : ''}
+            <h1>{blog.title} {blog.author}</h1>
+            <a href='#'>{blog.url}</a >
+            <p>{`Likes: ${blog.likes}`} <button className='button-like' onClick={addLike}>like</button> </p>
+            <p>{`added by ${blog.userOfBlog.name}`}</p>
+            {blog.userOfBlog.id === token.id ? <button onClick={deleteBlog} >Delete</button> : ''}
         </div>
     );
 };

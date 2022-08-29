@@ -17,13 +17,13 @@ blogsRouter.post('/',userExtractor,async (request, response,next) => {
         const blog = request.body;
         const user = request.user;
 
-        const newBlog = new Blog({
+        const newBlog = await new Blog({
             title: blog.title,
             author: blog.author || 'Unknown',
             url: blog.url,
             likes: blog.likes || 0,
             userOfBlog: user._id
-        });
+        }).populate('userOfBlog',{ username:1, name:1 });
 
         const result = await newBlog.save();
         user.blogsOfUser = user.blogsOfUser.concat(result._id);
