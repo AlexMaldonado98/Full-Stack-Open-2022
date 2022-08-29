@@ -58,7 +58,7 @@ blogsRouter.put('/:id', async (request, response,next) => {
     try{
         console.log('que recibi del frontend',request.params.url);
         const blog = request.body;
-        const updateBlog = await Blog.findByIdAndUpdate(request.params.id,blog,{ new: true });
+        const updateBlog = await Blog.findByIdAndUpdate(request.params.id,blog,{ new: true }).populate('userOfBlog',{ username: 1, name: 1 });
         response.status(200).json(updateBlog);
 
     }catch(error){

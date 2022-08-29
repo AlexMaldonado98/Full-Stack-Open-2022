@@ -15,6 +15,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Users } from './components/Users';
 import { BlogList } from './components/BlogList';
 import { User } from './components/User';
+import { Menu } from './components/Menu';
 
 
 const App = () => {
@@ -36,12 +37,6 @@ const App = () => {
         }
     }, []);
 
-    const handleLogout = (event) => {
-        event.preventDefault();
-        window.localStorage.removeItem('userCredentials');
-        dispatch(logoutSesion());
-    };
-
     if (user === null) {
         return (
             <>
@@ -54,8 +49,7 @@ const App = () => {
     return (
         <div>
             <Notifications />
-            <span>{`user: ${user.username} logged in`}</span>
-            <button onClick={handleLogout}>logout</button>
+            <Menu />
             <h1>create new</h1>
             <Togglable button={'New Blog'} ref={toggleRef} >
                 <BlogForm/>
