@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addBlogWithNewLike } from '../reducer/blogsReducer';
 import { ShowNotification } from '../reducer/notificationReducer';
 import { useParams } from 'react-router-dom';
+import { Comments } from './Comments';
 
 const Blog = () => {
     const dispatch = useDispatch();
@@ -43,6 +44,8 @@ const Blog = () => {
             <p>{`Likes: ${blog.likes}`} <button className='button-like' onClick={addLike}>like</button> </p>
             <p>{`added by ${blog.userOfBlog.name}`}</p>
             {blog.userOfBlog.id === token.id ? <button onClick={deleteBlog} >Delete</button> : ''}
+            <div>Comments</div>
+            <Comments blog={blog}/>
         </div>
     );
 };

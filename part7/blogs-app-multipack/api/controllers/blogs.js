@@ -56,12 +56,29 @@ blogsRouter.delete('/:id',userExtractor,async (request,response,next) => {
 blogsRouter.put('/:id', async (request, response,next) => {
 
     try{
-        console.log('que recibi del frontend',request.params.url);
         const blog = request.body;
         const updateBlog = await Blog.findByIdAndUpdate(request.params.id,blog,{ new: true }).populate('userOfBlog',{ username: 1, name: 1 });
         response.status(200).json(updateBlog);
 
     }catch(error){
+        next(error);
+    }
+});
+
+blogsRouter.post('/:id/comments', async (request,response, next) => {
+    try {
+        const { body } = request;
+
+        const blog = await Blog.findById(body.id);
+
+        blog.comments = [...blog.comments, body.comment];
+
+        const result = await Blog.findByIdAndUpdate(blog.id,blog,{ new: true }).populate('userOfBlog',{ username: 1,name: 1 });
+
+        console.log(result);
+
+        response.status(200).json(result);
+    } catch (error) {
         next(error);
     }
 });
