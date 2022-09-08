@@ -30,6 +30,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/icons-material": "^5.10.3",
+    "@mui/material": "^5.10.3",
     "install": "^0.13.0",
     "npm": "^8.18.0",
     "react-router-dom": "^6.3.0"

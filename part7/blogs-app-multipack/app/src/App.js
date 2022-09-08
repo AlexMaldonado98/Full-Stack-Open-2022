@@ -16,6 +16,7 @@ import { Users } from './components/Users';
 import { BlogList } from './components/BlogList';
 import { User } from './components/User';
 import { Menu } from './components/Menu';
+import Container from '@mui/material/Container';
 
 
 const App = () => {
@@ -39,15 +40,15 @@ const App = () => {
 
     if (user === null) {
         return (
-            <>
+            <Container style={{ display: 'flex',height: '100vh', justifyContent: 'center', alignItems: 'center' }}>
                 <Notifications />
                 <LoginForm />
-            </>
+            </Container>
         );
     }
 
     return (
-        <div>
+        <Container sx={{ padding:'10px' }} >
             <Notifications />
             <Menu />
             <h1>create new</h1>
@@ -61,7 +62,7 @@ const App = () => {
                 <Route path='/users/:id' element={<User />} />
                 <Route path='/blogs/:id' element={<Blog />} />
             </Routes>
-        </div>
+        </Container>
     );
 };
 

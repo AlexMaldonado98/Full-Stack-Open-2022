@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { loginUserCredentials } from '../reducer/loginReducer';
 import { ShowNotification } from '../reducer/notificationReducer';
+import { TextField, Button, OutlinedInput } from '@mui/material';
+import { useFormControl as FormControl } from '@mui/material/FormControl';
+
 
 export const LoginForm = () => {
 
@@ -23,24 +26,44 @@ export const LoginForm = () => {
 
     return (
         <form onSubmit={handleSubmitLogin} >
-            log in to application
-            <div>Username
-                <input
+            <h1>log in to application</h1>
+            <div>
+                <TextField
+                    fullWidth
+                    label='Username'
                     type='text'
                     name='Username'
                     value={userName}
                     onChange={({ target }) => setUserName(target.value)}
-                />
+                >
+                    <FormControl sx={{ width: '25ch' }}>
+                        <OutlinedInput placeholder="Please enter text" />
+                    </FormControl>
+                </TextField>
+                {/* <input
+                    type='text'
+                    name='Username'
+                    value={userName}
+                    onChange={({ target }) => setUserName(target.value)}
+                /> */}
             </div>
-            <div>Password
-                <input
+            <div >
+                <TextField
+                    margin='normal'
+                    style={{ width: '100%' }}
+                    label='Password'
                     type='password'
                     name='Password'
                     value={password}
                     onChange={({ target }) => setPassword(target.value)}
                 />
             </div>
-            <button type='submit' id='login-button' >login</button>
+
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button variant="contained" type="submit" color='primary'>
+                    login
+                </Button>
+            </div>
         </form>
     );
 };

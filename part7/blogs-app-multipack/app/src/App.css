@@ -26,3 +26,7 @@
     padding-bottom: 3px;
     justify-content: center;
 }
+
+#root{
+    font-family: 'Roboto', sans-serif;
+}
