@@ -1,4 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server');
+const { v1: uudi } = require('uuid');
 
 let authors = [
     {
@@ -74,7 +75,7 @@ let books = [
         published: 2012,
         author: 'Sandi Metz',
         id: 'afa5de02-344d-11e9-a414-719c6709cf3e',
-        genres: ['refactoring', 'design']
+        genres: ['refactoring', 'design'] 
     },
     {
         title: 'Crime and punishment',
@@ -114,25 +115,57 @@ const typeDefs = gql`
         allBooks( author: String, genres: String ): [Book!]!
         allAuthors: [Author!]!
     }
+
+    type Mutation {
+        addBook(
+            title: String!
+            published: Int!
+            author: String!
+            genres: [String!]!
+        ): Book!
+    }
 `;
 
 const resolvers = {
     Query: {
         bookCount: () => books.length,
         authorCount: () => authors.length,
-        allBooks: (root,args) => {
-            if(args.author && args.genres){
+        allBooks: (root, args) => {
+            if (args.author && args.genres) {
                 return books.filter(book => book.author === args.author && book.genres.includes(args.genres));
-            }else if (args.genres){
+            } else if (args.genres) {
                 return books.filter(book => book.genres.includes(args.genres));
-            }else if(args.author){
+            } else if (args.author) {
                 return books.filter(book => book.author === args.author);
-                
-            }else{
+
+            } else {
                 return books;
             }
         },
         allAuthors: () => authors
+    },
+    Mutation: {
+        addBook: (root,args) => {
+            const author = authors.find(author => author.name === args.author);
+
+            if(!author){
+                const author = {
+                    id: uudi(),
+                    name: args.author
+                };
+                authors.push(author);
+            }
+
+            const newBook = {
+                id: uudi(),
+                ...args
+            };
+
+            books.push(newBook);
+
+            return newBook;
+
+        }
     },
     Author: {
         bookCount: (root) => books.filter(book => book.author === root.name).length
