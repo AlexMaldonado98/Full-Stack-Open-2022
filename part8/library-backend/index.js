@@ -123,6 +123,10 @@ const typeDefs = gql`
             author: String!
             genres: [String!]!
         ): Book!
+        editAuthor(
+            name: String!
+            setBornTo: Int!
+        ):Author
     }
 `;
 
@@ -165,6 +169,14 @@ const resolvers = {
 
             return newBook;
 
+        },
+        editAuthor: (root,args) => {
+            const objAuthor = authors.find(author => author.name === args.name);
+            if(!objAuthor) return null;
+            const indexObjAuthor = authors.indexOf(objAuthor,0);
+            objAuthor.born = args.setBornTo;
+            authors.splice(indexObjAuthor,1,objAuthor);
+            return objAuthor;
         }
     },
     Author: {
