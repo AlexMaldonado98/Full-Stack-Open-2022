@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer,UserInputError, gql } = require('apollo-server');
 const mongoose = require('mongoose');
 const Author = require('./models/author');
 const Book = require('./models/book');
@@ -211,12 +211,20 @@ const resolvers = {
             let author = await Author.findOne({name: args.author});
 
             if(!author){
-                author = new Author({name: args.author});
-                await author.save();
+                try {
+                    author = new Author({name: args.author});
+                    await author.save();
+                } catch (error) {
+                    throw new UserInputError(error.message,{invalidArgs: args});
+                }
             }
             
             const book = new Book({...args,author: author.id});
-            await book.save();
+            try {
+                await book.save();
+            } catch (error) {
+                throw new UserInputError(error.message,{invalidArgs:args});
+            }
             return book;
 
         },
@@ -229,9 +237,12 @@ const resolvers = {
             // return objAuthor;
             const objAuthor = await Author.findOne({name:args.name});
             if (!objAuthor) return null;
-            console.log(objAuthor);
-            const updateAuthor = await Author.findByIdAndUpdate({_id:objAuthor._id},{born: args.setBornTo},{new:true});
-            return updateAuthor;
+            try {
+                const updateAuthor = await Author.findByIdAndUpdate({_id:objAuthor._id},{born: args.setBornTo},{new:true});
+                return updateAuthor;
+            } catch (error) {
+                throw new UserInputError(error.message,{invalidArgs:args});
+            }
         }
     },
     Author: {
