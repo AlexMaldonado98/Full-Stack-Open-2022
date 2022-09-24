@@ -253,7 +253,7 @@ const resolvers = {
             } catch (error) {
                 throw new UserInputError(error.message, { invalidArgs: args });
             }
-            return book;
+            return await book.populate('author');
 
         },
         editAuthor: async (root, args, {currentUser}) => {
@@ -293,7 +293,7 @@ const resolvers = {
                 id: user._id
             };
 
-            return {value: jwt.sign(infoToken,process.env.JWT_SECRET_KEY,{expiresIn:60*60*24})};
+            return {value: jwt.sign(infoToken,process.env.JWT_SECRET_KEY)};
         }
     },
     Author: {

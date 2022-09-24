@@ -1,20 +1,13 @@
-import { useMutation, useQuery } from "@apollo/client"
-import { useState } from "react";
-import { EDIT_AUTHOR } from "../authors/mutations.js";
+import { useQuery } from "@apollo/client"
 import { ALL_AUTHORS } from '../authors/queries.js'
-import Select from "react-select";
+import { Birthday } from "./Birthday.js";
 
 
 
 const Authors = (props) => {
-  const [name, setName] = useState('')
-  const [born, setBorn] = useState('')
-  const [selectedOption, setSelectedOption] = useState(null);
   const { data, loading } = useQuery(ALL_AUTHORS);
 
-  const [editAuthor] = useMutation(EDIT_AUTHOR, {
-    refetchQueries: [{ query: ALL_AUTHORS }]
-  })
+  const authors = data?.allAuthors || []
 
   if (!props.show) {
     return null
@@ -22,25 +15,13 @@ const Authors = (props) => {
 
   if (loading) return <div>loading...</div>
 
-  const authors = data.allAuthors || []
-
-  const options = authors !== [] && authors.map(author => ({ value: author.name, label: author.name }))
+  
 
   // const options = [
   //   { value: 'chocolate', label: 'Chocolate' },
   //   { value: 'strawberry', label: 'Strawberry' },
   //   { value: 'vanilla', label: 'Vanilla' },
   // ];
-
-  console.log(name);
-  
-  const submit = (e) => {
-    e.preventDefault()
-    editAuthor({ variables: { name, born } })
-    setName('')
-    setBorn('')
-
-  }
 
   return (
     <div>
@@ -62,21 +43,8 @@ const Authors = (props) => {
         </tbody>
       </table>
       <div>
-        <form onSubmit={submit} >
-          <Select
-            placeholder='Select an author'
-            onChange={({value}) => setName(value)}
-            options={options}
-            isSearchable={false}
-          />
-          <div>
-            Born
-            <input type='number' value={born} onChange={({ target }) => setBorn(Number(target.value))} ></input>
-          </div>
-          <button>Update Author</button>
-        </form>
+        {props.children && <Birthday authors={authors} />}
       </div>
-
     </div>
   )
 }
