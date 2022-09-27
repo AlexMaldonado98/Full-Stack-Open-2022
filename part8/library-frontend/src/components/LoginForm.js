@@ -17,8 +17,6 @@ export const LoginForm = (props) => {
             window.localStorage.setItem('token-library',result.data.login.value)
             props.saveToken(result.data.login.value,'authors')
             setForm({username:'',password:''})
-            console.log('entre');
-            console.log(result);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[result.data])
