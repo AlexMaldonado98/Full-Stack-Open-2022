@@ -52,7 +52,6 @@ const App = () => {
       <Authors show={page === 'authors'} >{token}</Authors>
       <Books show={page === 'books'} />
       <LoginForm show={page === 'login'} saveToken={saveToken} />
-      {console.log(token)}
       {token && (
         <>
           <NewBook show={page === 'add'} />
