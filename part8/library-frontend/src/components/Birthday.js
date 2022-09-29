@@ -8,8 +8,6 @@ export const Birthday = ({ authors }) => {
     const [name, setName] = useState('')
     const [born, setBorn] = useState('')
 
-    const [selectedOption, setSelectedOption] = useState(null);
-
     const [editAuthor] = useMutation(EDIT_AUTHOR, {
         refetchQueries: [{ query: ALL_AUTHORS }]
     })
