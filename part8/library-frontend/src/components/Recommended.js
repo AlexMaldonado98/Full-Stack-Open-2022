@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { ALL_BOOKS, USER } from "../authors/queries";
+import { ALL_BOOKS, USER } from "../graphql/queries";
 
 export const Recommended = ({ show }) => {
     console.log('render');

@@ -1,8 +1,8 @@
 import { useMutation } from "@apollo/client"
-import { EDIT_AUTHOR } from "../authors/mutations.js";
+import { EDIT_AUTHOR } from "../graphql/mutations.js";
 import Select from "react-select";
 import { useState } from "react";
-import { ALL_AUTHORS } from '../authors/queries.js'
+import { ALL_AUTHORS } from '../graphql/queries.js'
 
 export const Birthday = ({ authors }) => {
     const [name, setName] = useState('')

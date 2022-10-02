@@ -1,6 +1,6 @@
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
-import { ALL_BOOKS } from "../authors/queries";
+import { ALL_BOOKS } from "../graphql/queries";
 
 const Books = (props) => {
 

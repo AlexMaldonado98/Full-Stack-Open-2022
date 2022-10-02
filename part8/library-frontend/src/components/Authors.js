@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client"
-import { ALL_AUTHORS } from '../authors/queries.js'
+import { ALL_AUTHORS } from '../graphql/queries.js'
 import { Birthday } from "./Birthday.js";
 
 
