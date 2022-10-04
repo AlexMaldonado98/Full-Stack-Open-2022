@@ -2,13 +2,11 @@ import { useQuery } from "@apollo/client";
 import { ALL_BOOKS, USER } from "../graphql/queries";
 
 export const Recommended = ({ show }) => {
-    console.log('render');
     const { data } = useQuery(ALL_BOOKS);
     const { data: user } = useQuery(USER);
-
     const favorite = user?.me?.favoriteGenre
     const books = data?.allBooks
-    
+
     if (!show) {
         return null
     }

@@ -1,10 +1,11 @@
-import { useApolloClient,useSubscription } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import { LoginForm } from './components/LoginForm'
 import NewBook from './components/NewBook'
 import { Recommended } from './components/Recommended'
+import { ALL_BOOKS } from './graphql/queries'
 import { BOOK_ADDED } from './graphql/subscriptions'
 
 const App = () => {
@@ -12,9 +13,27 @@ const App = () => {
   const [token, setToken] = useState(null)
   const client = useApolloClient();
 
+  const updateCacheWith = (newElement) => {
+    
+    const includedIn = ( set, object ) => set.map(p => p.id ).includes(object.id);
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    if(!includedIn(dataInStore.allBooks,newElement)){
+      client.writeQuery({
+        query:ALL_BOOKS,
+        data:{
+          ...dataInStore,
+          allBooks: [...dataInStore.allBooks, newElement]
+        }
+      })
+    }
+
+  }
+
   useSubscription(BOOK_ADDED,{
-    onSubscriptionData: () => {
-      window.alert('a new book has been added')
+    onSubscriptionData: ({subscriptionData}) => {
+      const bookAdded = subscriptionData.data.bookAdded;
+      updateCacheWith(bookAdded)
     }
   });
 
@@ -61,7 +80,7 @@ const App = () => {
       <LoginForm show={page === 'login'} saveToken={saveToken} />
       {token && (
         <>
-          <NewBook show={page === 'add'} />
+          <NewBook show={page === 'add'} updateCacheWith={updateCacheWith} />
           <Recommended show={page === 'recommend'} />
         </>
       )}
