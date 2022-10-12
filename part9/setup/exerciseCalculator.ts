@@ -8,12 +8,31 @@ interface Result {
     ratingDescription: string
 }
 
-const calculateExercises = (dailyHours:number[],target:number):Result => {
+interface Value {
+    dailyHours: Array<number>
+    target: number
+}
+
+const checkArgumentsExercises = (args: Array<string>): Value => {
+    if(args.length < 4) throw new Error('Not enough arguments');
+    const params = args.slice(2,args.length).map(element => Number(element));
+
+    if(params.includes(NaN)){
+        throw new Error('Provided values were not number!');
+    }else{
+        return {
+            dailyHours: params.slice(1,params.length),
+            target: params[0]
+        };
+    }
+};
+
+const calculateExercises = (dailyHours: number[],target: number): Result => {
     const periodLength = dailyHours.length;
     const trainingDays = dailyHours.filter(hour => hour > 0 ).length;
     const average = dailyHours.reduce((a,b) => b + a,0) / periodLength;
     const success = average >= target;
-    let rating:number;
+    let rating = 0;
     switch(true){
     case Math.round(average) <= 1:
         rating = 1;
@@ -39,5 +58,9 @@ const calculateExercises = (dailyHours:number[],target:number):Result => {
         average
     };
 };
-
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1],2));
+try {
+    const {dailyHours,target} = checkArgumentsExercises(process.argv);
+    console.log(calculateExercises(dailyHours,target));
+} catch (error) {
+    console.log(error.message);
+}
