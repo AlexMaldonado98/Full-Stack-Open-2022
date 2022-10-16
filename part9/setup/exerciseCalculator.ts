@@ -62,5 +62,6 @@ try {
     const {dailyHours,target} = checkArgumentsExercises(process.argv);
     console.log(calculateExercises(dailyHours,target));
 } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     console.log(error.message);
 }
