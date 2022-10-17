@@ -27,7 +27,7 @@ const checkArgumentsExercises = (args: Array<string>): Value => {
     }
 };
 
-const calculateExercises = (dailyHours: number[],target: number): Result => {
+export const calculateExercises = (dailyHours: number[],target: number): Result => {
     const periodLength = dailyHours.length;
     const trainingDays = dailyHours.filter(hour => hour > 0 ).length;
     const average = dailyHours.reduce((a,b) => b + a,0) / periodLength;
