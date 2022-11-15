@@ -12,8 +12,8 @@ app.get("/api/ping",(_req,res) => {
     res.status(200).send("pong");
 });
 
-app.use('/api/diagnose',routeDiagnose);
-app.use('/api/patient',routerPatients);
+app.use('/api/diagnoses',routeDiagnose);
+app.use('/api/patients',routerPatients);
 
 const PORT = 3001;
 app.listen(PORT,() => {
