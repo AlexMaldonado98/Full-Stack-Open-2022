@@ -1,4 +1,4 @@
-import { patientsData } from '../../data/patients';
+import patientsData from '../../data/patients';
 import { NewPatient, NonSensisitivePatientsData, Patients } from '../types';
 import {v1 as uuid} from 'uuid';
 
@@ -11,7 +11,7 @@ const getNonSensisitivePatientsData = ():Array<NonSensisitivePatientsData> => {
         id,
         name,
         dateOfBirth,
-        gender,
+        gender, 
         occupation
     }));
 };
