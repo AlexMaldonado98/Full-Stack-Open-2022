@@ -1,9 +1,9 @@
-import { ContentProps } from "./Content";
+import { CoursePart } from "../types"
 
-export const Total = (props:ContentProps) => {
+export const Total = ({parts}:{parts:Array<CoursePart>}) => {
     return(
         <p>
-            Number of exercises: {props.parts.reduce((carry,part) => carry + part.exerciseCount,0)}
+            Number of exercises: {parts.reduce((carry,part) => carry + part.exerciseCount  ,0)}
         </p>
     )
 }

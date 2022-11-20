@@ -2,5 +2,5 @@ export interface HeaderProps{
     name:string
 }
 export const Header = (props:HeaderProps) => {
-    return <p>{props.name}</p>
+    return <h1><strong>{props.name}</strong></h1>
 }

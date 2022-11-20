@@ -1,16 +1,10 @@
-export type Part = {
-    name: string
-    exerciseCount: number
-}
+import { CoursePart } from "../types"
+import {Part} from './Part'
 
-export interface ContentProps {
-    parts: Array<Part>
-}
-
-export const Content = (props: ContentProps) => {
+export const Content = ( {parts}:{parts:Array<CoursePart>}) => {
     return (
         <>
-            {props.parts.map((part) => <p key={part.name}>{part.name} {part.exerciseCount}</p>)}
+            {parts.map(part => <Part key={part.name} part={part} />)}
         </>
     )
 }
