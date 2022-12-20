@@ -1,12 +1,12 @@
 import patientsData from '../../data/patients';
-import { NewPatient, NonSensisitivePatientsData, Patients } from '../types';
+import { NewPatient, /* NonSensisitivePatientsData, */ Patients, PublicPatient } from '../types';
 import {v1 as uuid} from 'uuid';
 
 const getPatients = ():Array<Patients> => {
     return patientsData;
 };
 
-const getNonSensisitivePatientsData = ():Array<NonSensisitivePatientsData> => {
+const getNonSensisitivePatientsData = ():Array<PublicPatient> => {
     return patientsData.map(({id,name,dateOfBirth,gender,occupation}) => ({
         id,
         name,
@@ -16,10 +16,16 @@ const getNonSensisitivePatientsData = ():Array<NonSensisitivePatientsData> => {
     }));
 };
 
+const getPatient = (id:string):Patients|undefined => {
+    const targetPatient: Patients | undefined = patientsData.find(patient => patient.id === id);
+    return targetPatient;
+};
+
 const addPatient = (patient:NewPatient):Patients => {
     const newPatient = {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
         id: uuid(),
+        entries:[],
         ...patient
     };
     patientsData.push(newPatient);
@@ -29,5 +35,6 @@ const addPatient = (patient:NewPatient):Patients => {
 export default {
     getPatients,
     getNonSensisitivePatientsData,
-    addPatient
+    addPatient,
+    getPatient
 };

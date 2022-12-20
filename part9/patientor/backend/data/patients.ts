@@ -46,6 +46,7 @@ export const data = [
 const patientsData: Patients[] = data.map((obj) => {
     const object = toNewPatient(obj) as Patients;
     object.id = obj.id;
+    object.entries = [];
     return object;
 });
 
