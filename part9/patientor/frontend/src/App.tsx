@@ -9,9 +9,10 @@ import { Patient } from "./types";
 
 import PatientListPage from "./PatientListPage";
 import { Typography } from "@material-ui/core";
+import PatientInfo from "./Patient/PatientInfo";
 
 const App = () => {
-  const [, dispatch] = useStateValue();
+  const [{patients}, dispatch] = useStateValue();
   React.useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
 
@@ -20,6 +21,7 @@ const App = () => {
         const { data: patientListFromApi } = await axios.get<Patient[]>(
           `${apiBaseUrl}/patients`
         );
+        console.log('YA APP');
         dispatch({ type: "SET_PATIENT_LIST", payload: patientListFromApi });
       } catch (e) {
         console.error(e);
@@ -41,6 +43,9 @@ const App = () => {
           <Divider hidden />
           <Routes>
             <Route path="/" element={<PatientListPage />} />
+            {console.log(Object.values(patients).length)}
+            {/*Prevents the Alex component from rendering more than twice when the page is reloaded within the Alex component*/}
+            {Object.values(patients).length !== 0 && <Route path="/patients/:id" element={<PatientInfo />}/>}
           </Routes>
         </Container>
       </Router>
