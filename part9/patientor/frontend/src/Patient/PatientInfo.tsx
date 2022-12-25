@@ -1,11 +1,11 @@
-import { Table, TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
-import { Male, Female, Transgender } from "@mui/icons-material";
 import axios from "axios";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
 import { updatePatient, useStateValue } from "../state";
 import { Patient } from "../types";
+import BasicInfoPatient from "./BasicInfoPatient";
+import DiagnosisInfo from "./DiagnosisInfo";
 
 const PatientInfo = () => {
     console.log('ensamblando patieniNFO');
@@ -36,32 +36,10 @@ const PatientInfo = () => {
         return null;
     }
 
-    const genderIcon = (gender: string) => {
-        switch (gender.toLowerCase()) {
-            case 'male':
-                return <Male />;
-            case 'female':
-                return <Female />;
-            default:
-                return <Transgender />;
-        }
-    };
-
     return (
         <div>
-            <Typography align="left" variant='h3' style={{marginTop:'2em'}} >
-                {patient.name} {genderIcon(patient.gender)}
-            </Typography>
-            <Table>
-                <TableBody >
-                    <TableRow>
-                        <TableCell>SSN: {patient.ssn}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>OCCUPATION: {patient.occupation}</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
+            <BasicInfoPatient patient={patient} />
+            {patient?.entries && <DiagnosisInfo entries={patient.entries} />}
         </div>
     );
 };
