@@ -1,46 +1,44 @@
-import { Table, TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
-import { useStateValue } from "../state";
+import { Typography } from "@material-ui/core";
 import { Entry } from "../types";
+import HealthCheck from "./HealthCheck";
+import Hospital from "./Hospital";
+import OccupationalHealthcare from "./OccupationalHealthcare";
 
 
 type Props = {
     entries: Entry[]
 };
 
+const assingNever = (value: never): never => {
+    throw new Error(`Unhandled discriminated union member: ${JSON.stringify(value)}`);
+};
+
 const DiagnosisInfo = ({ entries }: Props): JSX.Element | null => {
+
     if (entries.length === 0) {
         return null;
     }
 
-    const [{ diagnosis },] = useStateValue();
+    const entryDetails = (entry: Entry): JSX.Element | undefined => {
+        switch (entry.type) {
+            case 'HealthCheck':
+                return <HealthCheck entry={entry} />;
+            case 'Hospital':
+                return <Hospital entry={entry} />;
+            case 'OccupationalHealthcare':
+                return <OccupationalHealthcare entry={entry} />;
+            default:
+                assingNever(entry);
+        }
+    };
 
     return (
         <>
             <Typography align="left" variant='h4' style={{ marginTop: '1em' }} >
                 Entries
             </Typography>
-            {entries.map(entry => (
-                <Table key={entry.id}>
-                    <TableBody >
-                        <TableRow >
-                            <TableCell>
-                                <div>
-                                    Date: {entry.date} Description: {entry.description}
-                                </div>
-                                <div>
-                                    <ul>
-                                        {entry.diagnosisCodes?.map(code => (
-                                            <li key={code}>
-                                                {code} : {Object.values(diagnosis).map(diagnoseKey => diagnoseKey.code === code && diagnoseKey.name)}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            ))}
+
+            {entries.map(entry => entryDetails(entry))}
         </>
     );
 
