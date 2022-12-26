@@ -8,7 +8,6 @@ import BasicInfoPatient from "./BasicInfoPatient";
 import DiagnosisInfo from "./DiagnosisInfo";
 
 const PatientInfo = () => {
-    console.log('ensamblando patieniNFO');
     const { id } = useParams<{ id: string }>();
     const [{ patients }, dispatch] = useStateValue();
     const patient = patients[id as string];

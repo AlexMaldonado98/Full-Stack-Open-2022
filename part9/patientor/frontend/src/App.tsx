@@ -4,25 +4,25 @@ import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import { Button, Divider, Container } from "@material-ui/core";
 
 import { apiBaseUrl } from "./constants";
-import { setPatientList, useStateValue } from "./state";
-import { Patient } from "./types";
+import { setDiagnosisList, setPatientList, useStateValue } from "./state";
+import { Diagnosis, Patient } from "./types";
 
 import PatientListPage from "./PatientListPage";
 import { Typography } from "@material-ui/core";
-import PatientInfo from "./Patient/PatientInfo";
+import PatientInfo from "./Patient";
 
 const App = () => {
   const [{patients}, dispatch] = useStateValue();
   React.useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
-
     const fetchPatientList = async () => {
       try {
         const { data: patientListFromApi } = await axios.get<Patient[]>(
           `${apiBaseUrl}/patients`
         );
-        console.log('YA APP');
+        const {data: diagnosisListFromApi} = await axios.get<Diagnosis[]>(`${apiBaseUrl}/diagnoses`);
         dispatch(setPatientList(patientListFromApi));
+        dispatch(setDiagnosisList(diagnosisListFromApi));
       } catch (e) {
         console.error(e);
       }
@@ -42,7 +42,6 @@ const App = () => {
           <Divider hidden />
           <Routes>
             <Route path="/" element={<PatientListPage />} />
-            {console.log(Object.values(patients).length)}
             {/*Prevents the Alex component from rendering more than twice when the page is reloaded within the Alex component*/}
             {Object.values(patients).length !== 0 && <Route path="/patients/:id" element={<PatientInfo />}/>}
           </Routes>

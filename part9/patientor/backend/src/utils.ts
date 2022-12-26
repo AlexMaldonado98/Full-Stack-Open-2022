@@ -67,7 +67,6 @@ const parseEntries = (entries:Entry[] | undefined):Entry[] | undefined => {
     
             switch(entry.type){
                 case "HealthCheck":
-                    console.log(typeof entry.healthCheckRating !== 'number');
                     if(entry.healthCheckRating === undefined || typeof entry.healthCheckRating !== 'number'){
                         throw new Error('Incorrect or is missing HealthCheckRating');
                     } 
@@ -85,7 +84,7 @@ const parseEntries = (entries:Entry[] | undefined):Entry[] | undefined => {
                     if(!entry.employerName || !isString(entry.employerName)){
                         throw new Error('Incorrect or is missing employerName');
                     }else if(entry.sickLeave){
-                        if(Object.values(entry.sickLeave).length === 0){
+                        if(Object.keys(entry.sickLeave).length === 0){
                             throw new Error('Incorrect or is missing sickLeave');
                         }else if(!entry.sickLeave.startDate || !isDate(entry.sickLeave.startDate)){
                             throw new Error('Incorrect or is missing "startDate" on sickLeave');

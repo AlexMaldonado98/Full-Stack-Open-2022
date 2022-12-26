@@ -1,4 +1,5 @@
 import { Table, TableBody, TableCell, TableRow, Typography } from "@material-ui/core";
+import { useStateValue } from "../state";
 import { Entry } from "../types";
 
 
@@ -7,9 +8,12 @@ type Props = {
 };
 
 const DiagnosisInfo = ({ entries }: Props): JSX.Element | null => {
-    if(entries.length === 0){
+    if (entries.length === 0) {
         return null;
     }
+
+    const [{ diagnosis },] = useStateValue();
+
     return (
         <>
             <Typography align="left" variant='h4' style={{ marginTop: '1em' }} >
@@ -19,16 +23,20 @@ const DiagnosisInfo = ({ entries }: Props): JSX.Element | null => {
                 <Table key={entry.id}>
                     <TableBody >
                         <TableRow >
-                            <TableCell>Date: {entry.date} Description: {entry.description}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <ul>
-                                {entry.diagnosisCodes?.map(code => (
-                                    <li key={code}>
-                                        {code}
-                                    </li>
-                                ))}
-                            </ul>
+                            <TableCell>
+                                <div>
+                                    Date: {entry.date} Description: {entry.description}
+                                </div>
+                                <div>
+                                    <ul>
+                                        {entry.diagnosisCodes?.map(code => (
+                                            <li key={code}>
+                                                {code} : {Object.values(diagnosis).map(diagnoseKey => diagnoseKey.code === code && diagnoseKey.name)}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
