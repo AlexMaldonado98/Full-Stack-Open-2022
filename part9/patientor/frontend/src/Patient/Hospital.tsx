@@ -21,9 +21,9 @@ const Hospital = ({ entry }: Props) => {
                             {
                                 entry?.diagnosisCodes?.length !== 0 && (
                                     <ul>
-                                        {entry.diagnosisCodes?.map(code => (
-                                            <li key={code}>
-                                                {code} : {Object.values(diagnosis).map(diagnoseKey => diagnoseKey.code === code && diagnoseKey.name)}
+                                        {entry.diagnosisCodes?.map((code,index) => (
+                                            <li key={index}>
+                                                {code} : {Object.values(diagnosis).find(diagnoseKey => diagnoseKey.code === code)?.name || "unknown"}
                                             </li>
                                         ))}
                                     </ul>

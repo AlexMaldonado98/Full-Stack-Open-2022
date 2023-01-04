@@ -18,7 +18,6 @@ const getNonSensisitivePatientsData = ():Array<PublicPatient> => {
 
 const getPatient = (id:string):Patients|undefined => {
     const targetPatient: Patients | undefined = patientsData.find(patient => patient.id === id);
-    console.log(patientsData);
     return targetPatient;
 };
 

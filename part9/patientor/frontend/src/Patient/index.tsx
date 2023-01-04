@@ -1,16 +1,47 @@
+import { Button } from "@material-ui/core";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
-import { updatePatient, useStateValue } from "../state";
-import { Patient } from "../types";
+import { addNewEntry, updatePatient, useStateValue } from "../state";
+import { Entry, FieldsOnlyHospitalEntry, Patient } from "../types";
+import AddEntryModal from "./AddEntryModal/AddEntryModal";
 import BasicInfoPatient from "./BasicInfoPatient";
 import DiagnosisInfo from "./DiagnosisInfo";
 
+
 const PatientInfo = () => {
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [error,setError] = useState<string>();
     const { id } = useParams<{ id: string }>();
     const [{ patients }, dispatch] = useStateValue();
     const patient = patients[id as string];
+    
+
+    const submitNewEntry = async (values: FieldsOnlyHospitalEntry) => {
+        try {
+            console.log(values);
+            if(!id){
+                throw new Error('the id is missing');
+            }
+            const { data: newEntry } = await axios.post<Entry>(
+                `${apiBaseUrl}/patients/${id}/entries`,
+                values
+            );
+            dispatch(addNewEntry(id,newEntry));
+            closeModal();
+        } catch (e: unknown) {
+            if (axios.isAxiosError(e)) {
+                setError(String(e?.response?.data) || "Unrecognized axios error");
+            } else {
+                console.error("Unknown error", e);
+                setError("Unknown error");
+            }
+        }
+    };
+    const closeModal = () => setModalOpen(false);
+
+    const openModal = () => setModalOpen(true);
 
     React.useEffect(() => {
         const getPatient = async () => {
@@ -39,6 +70,10 @@ const PatientInfo = () => {
         <div>
             <BasicInfoPatient patient={patient} />
             {patient?.entries && <DiagnosisInfo entries={patient.entries} />}
+            <AddEntryModal error={error} onSubmit={submitNewEntry} onClose={closeModal} modalOpen={modalOpen} />
+            <Button variant="outlined" onClick={() => openModal()}>
+                Add New Entry
+            </Button>
         </div>
     );
 };

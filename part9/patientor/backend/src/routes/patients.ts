@@ -32,7 +32,7 @@ routerPatients.get('/:id',(req,res) => {
     }
 });
 
-routerPatients.post('/:id/entries',(req,res) => {
+routerPatients.post('/:id/entries',(req,res) => { 
     try {
         const {id} = req.params;
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -40,11 +40,14 @@ routerPatients.post('/:id/entries',(req,res) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const newEntry = toNewEntry(entry);
         const addedEntry = patientsServices.addEntry(newEntry,id);
-        res.status(201).send(addedEntry);
+        if(addedEntry){
+            res.status(201).send(addedEntry);
+        }
         
     } catch (error:unknown) {
         if(error instanceof Error){
             res.status(400).send(error.message);
+            return; 
         }
         res.status(404).send(error);
     }

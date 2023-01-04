@@ -19,16 +19,16 @@ const DiagnosisInfo = ({ entries }: Props): JSX.Element | null => {
         return null;
     }
 
-    const entryDetails = (entry: Entry): JSX.Element | undefined => {
+    const entryDetails = (entry: Entry,index:number): JSX.Element => {
         switch (entry.type) {
             case 'HealthCheck':
-                return <HealthCheck entry={entry} />;
+                return <HealthCheck key={index} entry={entry} />;
             case 'Hospital':
-                return <Hospital entry={entry} />;
+                return <Hospital key={index} entry={entry} />;
             case 'OccupationalHealthcare':
-                return <OccupationalHealthcare entry={entry} />;
+                return <OccupationalHealthcare key={index} entry={entry} />;
             default:
-                assingNever(entry);
+                return assingNever(entry);
         }
     };
 
@@ -38,7 +38,7 @@ const DiagnosisInfo = ({ entries }: Props): JSX.Element | null => {
                 Entries
             </Typography>
 
-            {entries.map(entry => entryDetails(entry))}
+            {entries.map((entry,index) => entryDetails(entry,index))}
         </>
     );
 
