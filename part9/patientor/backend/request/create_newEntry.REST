@@ -1,0 +1,14 @@
+POST HTTP://localhost:3001/api/patientS/d2773336-f723-11e9-8f0b-362b9e155667/entries
+Content-Type: application/json
+
+{
+    "date": "2030-12-12",
+    "type":"Hospital",
+    "specialist":"Alex Maldonado",
+    "diagnosisCodes":["100.1"],
+    "description":"prueba api rest .REST",
+    "discharge": {
+        "date": "2015-01-16",
+        "criteria": "Thumb has healed."
+    }
+}
