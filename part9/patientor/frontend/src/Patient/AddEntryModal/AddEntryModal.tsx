@@ -1,13 +1,12 @@
 import React from "react";
 import { Dialog, DialogTitle, DialogContent, Divider } from "@material-ui/core";
-import AddEntryForm from "./AddEntryForm";
-import { FieldsOnlyHospitalEntry } from "../../types";
+import AddEntryForm, { EntryFormValues } from "./AddEntryForm";
 import { Alert } from "@material-ui/lab";
 
 interface Props {
   modalOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: FieldsOnlyHospitalEntry) => void;
+  onSubmit: (values: EntryFormValues) => void;
   error?:string 
 }
 

@@ -1,15 +1,29 @@
 import { Field, Form, Formik } from "formik";
 import { DiagnosisSelection, TextField } from "../../AddPatientModal/FormField";
-import { DischargeFieldsForm, SelectField } from "./FormField";
+import { DischargeFieldsForm, NumberField2, OccupationalFieldsForm, SelectField } from "./FormField";
 import { useStateValue } from "../../state";
-import { FieldsOnlyHospitalEntry, TypeEntry } from "../../types";
+import { EntryForm, TypeEntry } from "../../types";
 import { TypeOptions } from "./FormField";
 import { Button, Grid } from "@material-ui/core";
 
+export type EntryFormValues = Omit<EntryForm,'id'>;
+
 interface Props {
-    onSubmit: (values: FieldsOnlyHospitalEntry) => void;
+    onSubmit: (values: EntryFormValues) => void;
     onCancel: () => void;
 }
+
+const objHelper = {
+    "HealthCheck": <Field
+        label="healthCheckRating"
+        component={NumberField2}
+        min={0}
+        max={3}
+        name="healthCheckRating"
+    />,
+    "Hospital": <DischargeFieldsForm />,
+    "OccupationalHealthcare": <OccupationalFieldsForm />
+};
 
 const typeOptions: TypeOptions[] = [
     { value: TypeEntry.HealthCheck, label: "Health check type" },
@@ -19,7 +33,7 @@ const typeOptions: TypeOptions[] = [
 
 const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
     const [{ diagnosis }] = useStateValue();
-
+    console.log('render form');
     return (
         <Formik
             initialValues={{
@@ -27,9 +41,15 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
                 specialist: '',
                 description: '',
                 diagnosisCodes: [],
+                healthCheckRating: 0,
                 discharge: {
                     date: '',
                     criteria: ''
+                },
+                employerName: '',
+                sickLeave: {
+                    startDate: '',
+                    endDate: '',
                 },
                 type: 'Hospital',
             }}
@@ -37,7 +57,7 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
             validate={values => {
                 const requiredError = "Field is required";
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                let errors:any = {};
+                let errors: any = {};
                 if (!values.date) {
                     errors.date = requiredError;
                 }
@@ -47,21 +67,46 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
                 if (!values.description) {
                     errors.description = requiredError;
                 }
-                if(!values.discharge.date){
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    errors = {...errors,discharge:{...errors?.discharge}}; 
-                    errors.discharge.date = requiredError;
+                //HealthCheck type validation
+                if(values.healthCheckRating){
+                    if(values.healthCheckRating > 3 || values.healthCheckRating < 0){
+                        errors.healthCheckRating = "valid values are from 0 to 3";
+                    }
                 }
-                if(!values.discharge.criteria){
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    errors = {...errors,discharge:{...errors?.discharge}}; 
-                    errors.discharge.criteria = requiredError;
+                //OccupationalHealthcare type validation
+                if (!values.employerName && values.type === 'OccupationalHealthcare') {
+                    errors.employerName = requiredError;
+                }
+                if(values.sickLeave){
+                    if(values.sickLeave.startDate && !values.sickLeave.endDate){
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                        errors = {...errors,sickLeave:{...errors.sickLeave}};
+                        errors.sickLeave.endDate = requiredError;
+                    }
+                    if(values.sickLeave.endDate && !values.sickLeave.startDate){
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                        errors = {...errors,sickLeave:{...errors.sickLeave}};
+                        errors.sickLeave.startDate = requiredError;
+                    }
+                }
+                //Hospital type validation
+                if(values.discharge){
+                    if (!values.discharge.date && values.type === 'Hospital') {
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                        errors = { ...errors, discharge: { ...errors?.discharge } };
+                        errors.discharge.date = requiredError;
+                    }
+                    if (!values.discharge.criteria && values.type === 'Hospital') {
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                        errors = { ...errors, discharge: { ...errors?.discharge } };
+                        errors.discharge.criteria = requiredError;
+                    }
                 }
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                 return errors;
             }}
         >
-            {({ isValid, dirty, values,setFieldValue, setFieldTouched}) => {
+            {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
                 return (
                     <Form className="form ui">
                         <Field
@@ -88,7 +133,7 @@ const AddEntryForm = ({ onSubmit, onCancel }: Props) => {
                             diagnoses={Object.values(diagnosis)}
                         />
                         <SelectField label="Type of entry" name="type" options={typeOptions} />
-                        {values.type === 'Hospital' ? <DischargeFieldsForm /> : console.log('el type no es de tipo hospital')}
+                        {Object.keys(objHelper).includes(values.type) && objHelper[values.type as keyof typeof objHelper]}
                         <Grid>
                             <Grid item>
                                 <Button

@@ -1,4 +1,4 @@
-export enum HealthCheckRating{
+export enum HealthCheckRating {
   "Healthy" = 0,
   "LowRisk" = 1,
   "HighRisk" = 2,
@@ -12,7 +12,7 @@ export enum Gender {
 }
 
 export enum TypeEntry {
-  "Hospital" = "Hospital",
+  Hospital = "Hospital",
   HealthCheck = "HealthCheck",
   OccupationalHealthCare = "OccupationalHealthcare"
 }
@@ -37,12 +37,12 @@ export interface Diagnosis {
 interface BaseEntry {
   id: string
   date: string
-  specialist:string
+  specialist: string
   description: string
   diagnosisCodes?: Array<Diagnosis['code']>
 }
 
-export interface HealthCheckEntry extends BaseEntry{
+export interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck"
   healthCheckRating: HealthCheckRating
 }
@@ -50,23 +50,37 @@ export interface HealthCheckEntry extends BaseEntry{
 export interface HospitalEntry extends BaseEntry {
   type: "Hospital"
   discharge: {
-      date: string
-      criteria: string
+    date: string
+    criteria: string
   }
 }
 
-export interface OccupationalHealthcareEntry extends BaseEntry{
+export interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare"
   employerName: string
-  sickLeave?:{
-      startDate: string
-      endDate: string
+  sickLeave?: {
+    startDate: string
+    endDate: string
   }
 }
 
 export type Entry = | HealthCheckEntry | HospitalEntry | OccupationalHealthcareEntry;
 
-type UnionOmit<T,k extends string | number | symbol > = T extends unknown ? Omit<T,k> : never; 
+type UnionOmit<T, k extends string | number | symbol> = T extends unknown ? Omit<T, k> : never;
 
-export type FieldsEntries = UnionOmit<Entry,'id'>;
-export type FieldsOnlyHospitalEntry = Omit<HospitalEntry,'id'>;
+export type FieldsEntries = UnionOmit<Entry, 'id'>;
+export type FieldsOnlyHospitalEntry = Omit<HospitalEntry, 'id'>;
+
+export interface EntryForm extends BaseEntry {
+  type: string;
+  healthCheckRating?: HealthCheckRating;
+  discharge?:{
+    date:string
+    criteria:string
+  };
+  employerName?: string;
+  sickLeave?:{
+    startDate:string
+    endDate:string
+  }
+}

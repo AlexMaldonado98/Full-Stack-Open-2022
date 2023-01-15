@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
 import { addNewEntry, updatePatient, useStateValue } from "../state";
-import { Entry, FieldsOnlyHospitalEntry, Patient } from "../types";
+import { Entry, Patient } from "../types";
+import { EntryFormValues } from "./AddEntryModal/AddEntryForm";
 import AddEntryModal from "./AddEntryModal/AddEntryModal";
 import BasicInfoPatient from "./BasicInfoPatient";
 import DiagnosisInfo from "./DiagnosisInfo";
-
 
 const PatientInfo = () => {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -18,9 +18,8 @@ const PatientInfo = () => {
     const patient = patients[id as string];
     
 
-    const submitNewEntry = async (values: FieldsOnlyHospitalEntry) => {
+    const submitNewEntry = async (values: EntryFormValues) => {
         try {
-            console.log(values);
             if(!id){
                 throw new Error('the id is missing');
             }
@@ -28,6 +27,7 @@ const PatientInfo = () => {
                 `${apiBaseUrl}/patients/${id}/entries`,
                 values
             );
+            console.log(newEntry);
             dispatch(addNewEntry(id,newEntry));
             closeModal();
         } catch (e: unknown) {

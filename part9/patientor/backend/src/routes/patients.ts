@@ -4,7 +4,7 @@ import toNewPatient, { toNewEntry } from  '../utils';
 const routerPatients = express.Router();
 
 routerPatients.get('/', (_req, res) => {
-    res.status(200).send(patientsServices.getNonSensisitivePatientsData());
+    res.status(200).send(patientsServices.getNonSensisitivePatientsData()).end();
 });
 
 routerPatients.post('/', (req, res) => {
@@ -12,13 +12,13 @@ routerPatients.post('/', (req, res) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const newPatient = toNewPatient(req.body);
         const addedPatient = patientsServices.addPatient(newPatient);
-        res.status(201).send(addedPatient);
+        res.status(201).send(addedPatient).end();
     } catch (error: unknown) {
         let errorMessage = 'Something went wrong.';
         if (error instanceof Error) {
             errorMessage += ' Error: ' + error.message;
         }
-        res.status(400).send(errorMessage);
+        res.status(400).send(errorMessage).end();
     }
 });
 
@@ -26,7 +26,7 @@ routerPatients.get('/:id',(req,res) => {
     const {id} = req.params;
     const patient = patientsServices.getPatient(id);
     if(patient){
-        res.status(200).send(patient);
+        res.status(200).send(patient).end();
     }else{
         res.status(400).end();
     }

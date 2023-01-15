@@ -10,7 +10,7 @@ app.use(cors());
 
 app.get("/api/ping",(_req,res) => {
     res.status(200).send("pong");
-});
+}); 
 
 app.use('/api/diagnoses',routeDiagnose);
 app.use('/api/patients',routerPatients);

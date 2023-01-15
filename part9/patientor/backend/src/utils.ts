@@ -150,6 +150,20 @@ type EntryField ={
     }
 };
 
+//it verify that the valueExist parameter exits to return value parameter
+const bothOrNothing = (value:unknown,valueExist:unknown) => {
+    if((!value && valueExist) || (value && !valueExist)){
+        throw new Error('there must be start date and end date or no date');
+    }else if(!value && !valueExist){
+        return '';
+    }else if(value && valueExist){
+        parseDateOfBirth(valueExist);
+        return parseDateOfBirth(value);
+    }else{
+        throw new Error('I don\'t know what happened');
+    }
+};
+
 export const toNewEntry = (entry:EntryField): NewEntry => {
 
     const newEntry = {
@@ -183,8 +197,8 @@ export const toNewEntry = (entry:EntryField): NewEntry => {
                 ...newEntry,
                 employerName: parseEntry(entry.employerName),
                 sickLeave:{
-                    startDate: parseDateOfBirth(entry.sickLeave?.startDate),
-                    endDate: parseDateOfBirth(entry.sickLeave?.startDate)
+                    startDate: bothOrNothing(entry.sickLeave?.startDate,entry.sickLeave?.endDate),
+                    endDate: bothOrNothing(entry.sickLeave?.endDate,entry.sickLeave?.startDate)
                 },
                 type: 'OccupationalHealthcare'
             };
@@ -192,6 +206,8 @@ export const toNewEntry = (entry:EntryField): NewEntry => {
         default: throw new Error('uncontrolled type');
     }
 };
+
+
 
 const toNewPatient = ({ name, ssn, occupation, gender, dateOfBirth, entries }: Fields): NewPatient => {
     const newPatient: NewPatient = {
